@@ -1,0 +1,18 @@
+# ignore everything by default
+/*
+!.gitignore
+
+# allow dssast theme
+!/themes/
+/themes/*
+!/themes/dssast/
+
+# allow dssast core plugin
+!/plugins/
+/plugins/*
+!/plugins/dssast-core/
+
+# other random junk
+node_modules/
+.DS_Store
+*.log

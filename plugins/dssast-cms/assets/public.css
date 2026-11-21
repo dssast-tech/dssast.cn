@@ -1,0 +1,97 @@
+.dssast-content-list,
+.dssast-competitions {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+.dssast-content-list > article,
+.dssast-competitions > article,
+.dssast-details {
+    border: 1px solid currentColor;
+    border-color: color-mix(in srgb, currentColor 22%, transparent);
+    border-radius: .8rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    padding: clamp(1rem, 3vw, 1.5rem);
+}
+
+.dssast-content-list > article > h2,
+.dssast-competitions > article > h2,
+.dssast-details > h2 {
+    font-size: 1.25em;
+    margin: 0 0 .6em;
+}
+
+.dssast-content-list > article > p,
+.dssast-competitions > article > p,
+.dssast-details > p {
+    margin: .65em 0 0;
+}
+
+.dssast-competitions > article > img {
+    border-radius: .55rem;
+    height: auto;
+    max-width: 100%;
+}
+
+.dssast-note-submit form {
+    display: grid;
+    gap: .85rem;
+    margin-bottom: 1.5rem;
+}
+
+.dssast-note-submit form p {
+    margin: 0;
+}
+
+.dssast-note-submit input:not([type="hidden"]),
+.dssast-note-submit textarea {
+    background: transparent;
+    border: 1px solid currentColor;
+    border-radius: .5rem;
+    box-sizing: border-box;
+    color: inherit;
+    display: block;
+    font: inherit;
+    margin-top: .35rem;
+    padding: .55rem .7rem;
+    width: 100%;
+}
+
+.dssast-note-submit [role="status"] {
+    border-inline-start: 3px solid currentColor;
+    padding-inline-start: .8rem;
+}
+
+.dssast-note-submit button,
+.dssast-registration {
+    background: #125a50;
+    border: 1px solid transparent;
+    border-radius: .5rem;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font: inherit;
+    font-weight: 600;
+    justify-self: start;
+    padding: .55rem .85rem;
+    text-decoration: none;
+}
+
+.dssast-note-submit button:hover,
+.dssast-registration:hover {
+    background: #0b453d;
+    color: #fff;
+}
+
+.dssast-note-submit :focus-visible,
+.dssast-registration:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+}
+
+.dssast-note-submit button:focus-visible,
+.dssast-registration:focus-visible {
+    outline-color: #31887a;
+}

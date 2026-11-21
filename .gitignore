@@ -2,17 +2,19 @@
 /*
 !.gitignore
 
+# allow root readme
+!/README.md
+
 # allow dssast theme
 !/themes/
 /themes/*
 !/themes/dssast/
 
-# allow dssast core plugin
+# allow dssast plugins
 !/plugins/
 /plugins/*
-!/plugins/dssast-core/
+!/plugins/dssast-*/
 
 # other random junk
-node_modules/
 .DS_Store
 *.log

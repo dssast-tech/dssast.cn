@@ -29,7 +29,7 @@ section.hero {
   width: 100%;
   height: clamp(380px, 60svh, 620px);
   position: relative;
-  --hero-y-extent: 50px;
+  --hero-y-extent: 40px;
   --hero-spacing: 8px;
 
   @include mobile {
@@ -71,6 +71,7 @@ section.hero {
   font-family: inherit;
   font-size: 112px;
   font-weight: 800;
+  text-shadow: $shadow-md;
   animation: hero-spacing 1.5s both;
 }
 

@@ -4,14 +4,31 @@
 .front-page {
   section:not(.hero) {
     padding: 0 clamp(1rem, 5vw, 10rem);
+    margin-bottom: 2rem;
 
     h2 {
+      font-size: 2rem;
       margin-block: 0.5rem;
 
       &::before {
-        content: '';
-
+        content: '>';
+        font-family: $font-mono;
+        color: $color-logo-c;
+        font-size: 2.8rem;
+        margin-right: 1rem;
       }
+    }
+
+    .latest-title {
+      display: flex;
+      place-items: center end;
+      justify-content: space-between;
+    }
+  
+    .latest-list {
+      display: flex;
+      place-items: center end;
+      justify-content: space-between;
     }
   }
 
@@ -23,25 +40,40 @@
     }
 
     department-card {
+      position: relative;
       display: block;
+      z-index: 0;
       background: $color-surface;
       padding: 1rem;
       border-radius: 1rem;
       transition: box-shadow 0.2s ease;
       box-shadow: $shadow-card;
+      overflow: clip;
 
       &:hover {
         box-shadow: $shadow-card-hover;
       }
 
       > div {
+        position: absolute;
         color: $color-text-muted;
-        font-size: 0.8rem;
-        margin-bottom: -0.25rem;
+        font-size: 3rem;
+        font-weight: 700;
+        color: rgba($color-text-subtle, 0.2);
+        top: -0.2rem;
+        margin-left: 20%;
+        // margin-bottom: -0.25rem;
       }
 
       > h3 {
+        position: relative;
+        z-index: 1;
         font-size: 1.6rem;
+      }
+
+      > p {
+        position: relative;
+        z-index: 1;
       }
     }
   }

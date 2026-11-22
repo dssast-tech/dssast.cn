@@ -73,16 +73,20 @@
   </section>
 
   <section class="news">
-    <div>
-      <h2>最新通知与动态</h2>
+    <div class=latest-title>
+      <h2>最新公告</h2>
       <a href="<?php echo esc_url(home_url('/notes/')); ?>">
         查看全部 &rarr;
       </a>
     </div>
 
-    <div>
+    <div class="latest-list">
       <?php
-      $latest = new WP_Query(['posts_per_page' => 5, 'post_status' => 'publish']);
+      $latest = new WP_Query([
+        'posts_per_page' => 5,
+        'post_status' => 'publish',
+        'category_name' => 'announcements',
+        'no_found_rows' => true,]);
       if ($latest->have_posts()) :
         while ($latest->have_posts()) : $latest->the_post();
       ?>
@@ -102,6 +106,45 @@
       else :
         ?>
         <p>暂无已发布的通知公告。</p>
+      <?php endif; ?>
+    </div>
+  </section>
+
+  
+  <section class="news">
+    <div class=latest-title>
+      <h2>新闻一览</h2>
+      <a href="<?php echo esc_url(home_url('/notes/')); ?>">
+        查看全部 &rarr;
+      </a>
+    </div>
+
+    <div class="latest-list">
+      <?php
+      $latest = new WP_Query([
+        'posts_per_page' => 5,
+        'post_status' => 'publish',
+        'category_name' => 'news',
+        'no_found_rows' => true,]);
+      if ($latest->have_posts()) :
+        while ($latest->have_posts()) : $latest->the_post();
+      ?>
+          <article>
+            <time datetime="<?php echo get_the_date('c'); ?>">
+              <?php echo get_the_date('Y-m-d'); ?>
+            </time>
+            <h3>
+              <a href="<?php the_permalink(); ?>">
+                <?php the_title(); ?>
+              </a>
+            </h3>
+          </article>
+        <?php
+        endwhile;
+        wp_reset_postdata();
+      else :
+        ?>
+        <p>暂无已发布的新闻。</p>
       <?php endif; ?>
     </div>
   </section>

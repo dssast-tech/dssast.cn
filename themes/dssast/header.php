@@ -7,10 +7,19 @@
   <?php wp_head(); ?>
 </head>
 
-<?php $header_class = 'site-header' . (!empty($args['overlay']) ? ' is-overlay' : ''); ?>
+<?php
+$is_overlay = !empty($args['overlay']);
+$header_class = $is_overlay ? 'is-overlay' : '';
+$scroll_threshold = 64;
+?>
 
 <body>
-  <header x-data="{ mobileOpen: false }" class="<?= esc_attr($header_class) ?>">
+  <header x-data="{ mobileOpen: false, scrolled: false }" class="<?= esc_attr($header_class) ?>"
+    <?php if ($is_overlay) : ?>
+    x-init="scrolled = window.scrollY > <?= $scroll_threshold ?>"
+    @scroll.window.passive="scrolled = window.scrollY > <?= $scroll_threshold ?>"
+    :class="{ 'is-scrolled': scrolled }"
+    <?php endif; ?>>
     <a href="<?php echo esc_url(home_url('/')); ?>" class="site-logo" aria-label="DSSAST">
       <!-- TODO: 这里应该放img，找一下资源 -->
       <span>DS</span>

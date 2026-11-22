@@ -19,7 +19,7 @@
     </a>
 
     <nav>
-      <a href="<?php echo esc_url(home_url('/announcement/')); ?>">公告</a>
+      <a href="<?php echo esc_url(home_url('/announcements/')); ?>">公告</a>
       <a href="<?php echo esc_url(home_url('/news/')); ?>">新闻</a>
       <a href="<?php echo esc_url(home_url('/events/')); ?>">赛事</a>
       <a href="<?php echo esc_url(home_url('/notes/')); ?>">笔记</a>

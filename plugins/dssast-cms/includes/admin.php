@@ -45,7 +45,7 @@ function dssast_management_views() {
         'notes' => array( 'title' => '全部笔记', 'type' => 'dssast_note', 'category' => '' ),
         'pending' => array( 'title' => '待审核笔记', 'type' => 'dssast_note', 'category' => '' ),
         'news' => array( 'title' => '新闻管理', 'type' => 'post', 'category' => 'news' ),
-        'announcements' => array( 'title' => '公告管理', 'type' => 'post', 'category' => 'announcement' ),
+        'announcements' => array( 'title' => '公告管理', 'type' => 'post', 'category' => 'announcements' ),
     );
 }
 
@@ -71,7 +71,7 @@ add_action( 'load-post-new.php', function () {
     }
 
     $term = get_term( absint( $_GET['dssast_category'] ), 'category' );
-    if ( ! $term || is_wp_error( $term ) || ! in_array( $term->slug, array( 'news', 'announcement' ), true ) ) {
+    if ( ! $term || is_wp_error( $term ) || ! in_array( $term->slug, array( 'news', 'announcements' ), true ) ) {
         return;
     }
 

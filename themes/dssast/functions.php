@@ -2,17 +2,24 @@
 add_action('after_setup_theme', function () {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
-    register_nav_menus(['primary' => '顶部主导航']);
 });
 
 add_action('wp_enqueue_scripts', function () {
-    $dir = get_template_directory();
-    $uri = get_template_directory_uri();
+    $theme_uri = get_template_directory_uri();
+    $theme_dir = get_template_directory();
 
-    if (file_exists($dir . '/dist/app.css')) {
-        wp_enqueue_style('theme-app', $uri . '/dist/app.css', [], filemtime($dir . '/dist/app.css'));
+    wp_enqueue_style('dssast-font-misans', 'https://cdn.jsdelivr.net/npm/misans@5.0.0/lib/Normal/MiSansVF.min.css', [], null);
+
+    $css_path = $theme_dir . '/dist/app.css';
+    if (file_exists($css_path)) {
+        wp_enqueue_style('dssast-app', $theme_uri . '/dist/app.css', [], filemtime($css_path));
     }
-    if (file_exists($dir . '/dist/app.js')) {
-        wp_enqueue_script('theme-app', $uri . '/dist/app.js', [], filemtime($dir . '/dist/app.js'), true);
+
+    $js_path = $theme_dir . '/dist/app.js';
+    if (file_exists($js_path)) {
+        wp_enqueue_script('dssast-app', $theme_uri . '/dist/app.js', [], filemtime($js_path), [
+            'strategy' => 'defer',
+            'in_footer' => true,
+        ]);
     }
 });

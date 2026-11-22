@@ -1,0 +1,87 @@
+@use "../variables" as *;
+
+// Here we go!
+
+/* Converted from Rive, where the animations are proudly keyframed by human hand. */
+/* prettier-ignore */
+@keyframes hero-y {
+  0% { translate: 0 var(--hero-y-extent); animation-timing-function: cubic-bezier(0.2247, 0.0206, 0.3489, 3.7399); }
+  53.33%, 100% { translate: 0 calc(-1 * var(--hero-y-extent)); }
+}
+/* prettier-ignore */
+@keyframes hero-scale {
+  0% { scale: 0.4877; animation-timing-function: cubic-bezier(0.3194, -34.3832, 0.5931, -0.0259); }
+  23.33% { scale: 0.4920; animation-timing-function: cubic-bezier(0.929, 0.042, 0.1331, 0.8318); }
+  72.22%, 100% { scale: 1; }
+}
+/* prettier-ignore */
+@keyframes hero-spacing {
+  0%, 35.56% { letter-spacing: 0px; animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1); }
+  57.78%, 100% { letter-spacing: var(--hero-spacing); }
+}
+/* prettier-ignore */
+@keyframes hero-opacity {
+  0% { opacity: 0; animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1); }
+  71.11%, 100% { opacity: 1; }
+}
+
+section.hero {
+  width: 100%;
+  height: clamp(380px, 60svh, 620px);
+  position: relative;
+  --hero-y-extent: 50px;
+  --hero-spacing: 8px;
+
+  @include mobile {
+    height: clamp(300px, 40svh, 560px);
+    --hero-y-extent: 30px;
+    --hero-spacing: 4px;
+  }
+}
+
+.hero-container {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: clip;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 21px, rgba($color-surface, 0.7) 21px 25px),
+    repeating-linear-gradient(90deg, transparent 0 21px, rgba($color-surface, 0.7) 21px 25px);
+}
+
+.hero-title {
+  width: clamp(40px, 90vw, 1000px);
+  margin: 0;
+  transform-origin: center;
+  animation:
+    hero-y 1.5s both,
+    hero-scale 1.5s both,
+    hero-opacity 1.5s both;
+}
+
+.hero-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.hero-text {
+  font-family: inherit;
+  font-size: 112px;
+  font-weight: 800;
+  animation: hero-spacing 1.5s both;
+}
+
+.hero-orbs circle {
+  mix-blend-mode: screen;
+}
+
+.hero-mask {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: linear-gradient(transparent 70%, $color-bg 100%);
+}

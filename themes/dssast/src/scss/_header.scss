@@ -1,0 +1,67 @@
+@use "variables" as *;
+
+body > header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: $header-height;
+  width: 100%;
+  background: rgba($color-bg, 0.5);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid $color-border;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(1rem, 3vw, 3rem);
+
+  @include desktop {
+    &.is-overlay {
+      position: fixed;
+    }
+  }
+
+  > .site-logo {
+    display: flex;
+    font-weight: 700;
+    flex-wrap: nowrap;
+    font-size: 1.8rem;
+
+    span:nth-child(1) {
+      color: #20296e;
+    }
+    span:nth-child(2) {
+      color: #1b60a3;
+    }
+    span:nth-child(3) {
+      color: #37a9e0;
+    }
+
+    transition: transform 0.25s ease;
+    &:hover {
+      transform: scale(1.05);
+      text-decoration: none;
+    }
+  }
+
+  > nav {
+    display: flex;
+    gap: 2rem;
+    font-weight: 500;
+
+    a {
+      color: $color-text-muted;
+      transition: color 0.15s ease;
+      &:hover {
+        color: $color-text;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.home.admin-bar > header.is-overlay {
+  @include desktop {
+    top: 32px;
+  }
+}

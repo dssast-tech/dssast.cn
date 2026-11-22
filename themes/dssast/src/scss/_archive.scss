@@ -1,0 +1,77 @@
+.archive-list {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 46rem; // 和正文页同宽，视觉统一；如果是多列卡片可放宽到 72rem
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+  padding-block: clamp(1.5rem, 4vw, 3rem);
+}
+
+.archive-header {
+
+  .archive-desc {
+    margin-top: 0.5rem;
+    opacity: 0.7;
+  }
+}
+
+.post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.post-item {
+  padding-block: 1.25rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+  a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    text-decoration: none;
+
+    @media (max-width: 600px) {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  time {
+    flex-shrink: 0;
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums; // 等宽数字，日期右侧对齐更整齐
+    opacity: 0.6;
+  }
+
+  .post-excerpt {
+    margin: 0.5rem 0 0;
+    font-size: 0.9375rem;
+    opacity: 0.75;
+    line-height: 1.6;
+  }
+}
+
+.pagination .nav-links {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2.5rem;
+
+  .page-numbers {
+    padding: 0.35rem 0.75rem;
+    text-decoration: none;
+
+    &.current {
+      font-weight: 600;
+      opacity: 0.5;
+    }
+  }
+}

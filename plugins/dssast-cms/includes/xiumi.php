@@ -67,7 +67,7 @@ function dssast_xiumi_html( $request ) {
    );
    if ( '' === $previous_hash ) {
     dssast_ensure_categories();
-    $news = get_term_by( 'slug', 'dssast-news', 'category' );
+    $news = get_term_by( 'slug', 'news', 'category' );
     if ( ! $news ) { return dssast_xiumi_fail( 'dssast_news_category', 500 ); }
     $post['post_category'] = array( (int) $news->term_id );
    }

@@ -7,22 +7,22 @@ add_filter( 'use_block_editor_for_post_type', function ( $enabled, $type ) {
 }, 100, 2 );
 
 function dssast_ensure_categories() {
- foreach ( array( 'dssast-news' => '新闻', 'dssast-announcement' => '公告' ) as $slug => $name ) {
+ foreach ( array( 'news' => '新闻', 'announcement' => '公告' ) as $slug => $name ) {
   if ( ! get_term_by( 'slug', $slug, 'category' ) ) { wp_insert_term( $name, 'category', array( 'slug' => $slug ) ); }
  }
 }
 add_action( 'init', function () {
  if ( '0.3.0' !== get_option( 'dssast_schema_version' ) ) {
   dssast_ensure_categories();
-  if ( get_term_by( 'slug', 'dssast-news', 'category' ) && get_term_by( 'slug', 'dssast-announcement', 'category' ) ) { update_option( 'dssast_schema_version', '0.3.0', false ); }
+  if ( get_term_by( 'slug', 'news', 'category' ) && get_term_by( 'slug', 'announcement', 'category' ) ) { update_option( 'dssast_schema_version', '0.3.0', false ); }
  }
 }, 20 );
 
 function dssast_content_list( $atts, $content, $tag ) {
- $atts = shortcode_atts( array( 'limit' => 10, 'category' => 'dssast-news' ), $atts, $tag );
+ $atts = shortcode_atts( array( 'limit' => 10, 'category' => 'news' ), $atts, $tag );
  $args = array( 'post_type' => 'dssast_notes' === $tag ? 'dssast_note' : 'post', 'post_status' => 'publish', 'has_password' => false, 'posts_per_page' => max( 1, min( 50, absint( $atts['limit'] ) ) ), 'no_found_rows' => true );
- if ( 'post' === $args['post_type'] ) { $args['category_name'] = in_array( $atts['category'], array( 'dssast-news', 'dssast-announcement' ), true ) ? $atts['category'] : 'dssast-news'; }
- $query = new WP_Query( $args ); $html = '<div class="dssast-content-list">';
+ if ( 'post' === $args['post_type'] ) { $args['category_name'] = in_array( $atts['category'], array( 'news', 'announcement' ), true ) ? $atts['category'] : 'news'; }
+ $query = new WP_Query( $args ); $html = '<div class="content-list">';
  foreach ( $query->posts as $post ) { $html .= '<article><h2><a href="' . esc_url( get_permalink( $post ) ) . '">' . esc_html( get_the_title( $post ) ) . '</a></h2><p>' . esc_html( wp_trim_words( wp_strip_all_tags( $post->post_excerpt ?: strip_shortcodes( $post->post_content ) ), 40 ) ) . '</p></article>'; }
  return $html . ( $query->posts ? '' : '<p>暂无内容。</p>' ) . '</div>';
 }

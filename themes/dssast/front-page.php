@@ -72,42 +72,60 @@
     </department-container>
   </section>
 
-  <section class="news">
-    <div class=latest-title>
-      <h2>最新公告</h2>
-      <a href="<?php echo esc_url(home_url('/notes/')); ?>">
+  <?php
+  $announcements_url = get_term_link('announcements', 'category');
+  if (is_wp_error($announcements_url)) {
+    $announcements_url = add_query_arg('category_name', 'announcements', home_url('/'));
+  }
+  $now = current_datetime()->getTimestamp();
+  $recent_since = $now - 3 * DAY_IN_SECONDS;
+  $announcements = new WP_Query([
+    'post_type' => 'post',
+    'posts_per_page' => 5,
+    'post_status' => 'publish',
+    'has_password' => false,
+    'category_name' => 'announcements',
+    'ignore_sticky_posts' => true,
+    'orderby' => 'date',
+    'order' => 'DESC',
+    'no_found_rows' => true,
+  ]);
+  ?>
+  <section class="announcements" aria-labelledby="announcements-title">
+    <div class="latest-title">
+      <h2 id="announcements-title">最新公告</h2>
+      <a class="announcements-all" href="<?php echo esc_url($announcements_url); ?>" aria-label="查看全部公告">
         查看全部 &rarr;
       </a>
     </div>
 
-    <div class="latest-list">
-      <?php
-      $latest = new WP_Query([
-        'posts_per_page' => 5,
-        'post_status' => 'publish',
-        'category_name' => 'announcements',
-        'no_found_rows' => true,]);
-      if ($latest->have_posts()) :
-        while ($latest->have_posts()) : $latest->the_post();
-      ?>
-          <article>
-            <time datetime="<?php echo get_the_date('c'); ?>">
-              <?php echo get_the_date('Y-m-d'); ?>
-            </time>
-            <h3>
-              <a href="<?php the_permalink(); ?>">
-                <?php the_title(); ?>
-              </a>
-            </h3>
-          </article>
-        <?php
-        endwhile;
-        wp_reset_postdata();
-      else :
+    <?php if ($announcements->have_posts()) : ?>
+      <ul class="announcement-list">
+        <?php while ($announcements->have_posts()) : $announcements->the_post();
+          $published = get_post_datetime();
+          $is_recent = $published && $published->getTimestamp() >= $recent_since && $published->getTimestamp() <= $now;
         ?>
-        <p>暂无已发布的通知公告。</p>
-      <?php endif; ?>
-    </div>
+          <li class="announcement-item">
+            <a class="announcement-link" href="<?php the_permalink(); ?>">
+              <time class="announcement-date" datetime="<?php echo esc_attr(get_the_date('c')); ?>" aria-label="<?php echo esc_attr(get_the_date('Y年n月j日')); ?>">
+                <span class="announcement-month-day"><?php echo esc_html(get_the_date('m.d')); ?></span>
+                <span class="announcement-year"><?php echo esc_html(get_the_date('Y')); ?></span>
+              </time>
+              <h3 class="announcement-heading">
+                <span class="announcement-title"><?php the_title(); ?></span>
+                <?php if ($is_recent) : ?><span class="announcement-badge">新</span><?php endif; ?>
+              </h3>
+              <svg class="announcement-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="M5 12h14m-6-6 6 6-6 6" />
+              </svg>
+            </a>
+          </li>
+        <?php endwhile; ?>
+      </ul>
+    <?php else : ?>
+      <p class="announcement-empty">暂无已发布的通知公告。</p>
+    <?php endif; ?>
+    <?php wp_reset_postdata(); ?>
   </section>
 
   

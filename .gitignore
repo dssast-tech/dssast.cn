@@ -1,20 +1,3 @@
-# ignore everything by default
-/*
-!.gitignore
-
-# allow root readme
-!/README.md
-
-# allow dssast theme
-!/themes/
-/themes/*
-!/themes/dssast/
-
-# allow dssast plugins
-!/plugins/
-/plugins/*
-!/plugins/dssast-*/
-
-# other random junk
+# random junk
 .DS_Store
 *.log

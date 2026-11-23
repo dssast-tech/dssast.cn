@@ -1,0 +1,9 @@
+{
+  "name": "dssast-wp-content",
+  "private": true,
+  "scripts": {
+    "build:theme": "npm --prefix themes/dssast run build:css && npm --prefix themes/dssast run build:js",
+    "serve": "node playground/start.mjs serve",
+    "start": "node playground/start.mjs"
+  }
+}

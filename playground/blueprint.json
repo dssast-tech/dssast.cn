@@ -1,0 +1,43 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "login": true,
+  "steps": [
+    { "step": "resetData" },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blog_public": "0",
+        "permalink_structure": "/%postname%/"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/dssast-sample-content.wxr",
+      "data": { "resource": "bundled", "path": "/sample-content.wxr" }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/dssast-prepare-site.php",
+      "data": { "resource": "bundled", "path": "/prepare-site.php" }
+    },
+    {
+      "step": "runPHPWithOptions",
+      "options": { "scriptPath": "/tmp/dssast-prepare-site.php" }
+    },
+    { "step": "activateTheme", "themeFolderName": "dssast" },
+    {
+      "step": "importWxr",
+      "file": { "resource": "vfs", "path": "/tmp/dssast-sample-content.wxr" },
+      "fetchAttachments": false,
+      "importComments": false,
+      "importUsers": false,
+      "authorsMode": "default-author",
+      "defaultAuthorUsername": "admin",
+      "rewriteUrls": false
+    },
+    {
+      "step": "defineWpConfigConsts",
+      "consts": { "DISALLOW_FILE_MODS": true }
+    }
+  ]
+}

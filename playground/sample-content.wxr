@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fictional test content for the local Playground. -->
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:wp="http://wordpress.org/export/1.2/" version="2.0">
+  <channel>
+    <title>笃实书院学生科协</title>
+    <link>https://dssast-demo.invalid</link>
+    <description>供 WordPress Playground 本地测试使用的虚构测试内容</description>
+    <language>zh-CN</language>
+    <wp:wxr_version>1.2</wp:wxr_version>
+    <wp:base_site_url>https://dssast-demo.invalid</wp:base_site_url>
+    <wp:base_blog_url>https://dssast-demo.invalid</wp:base_blog_url>
+    <wp:category>
+      <wp:term_id>10</wp:term_id>
+      <wp:category_nicename>news</wp:category_nicename>
+      <wp:category_parent />
+      <wp:cat_name>新闻</wp:cat_name>
+    </wp:category>
+    <wp:category>
+      <wp:term_id>11</wp:term_id>
+      <wp:category_nicename>announcements</wp:category_nicename>
+      <wp:category_parent />
+      <wp:cat_name>公告</wp:cat_name>
+    </wp:category>
+    <wp:term>
+      <wp:term_id>12</wp:term_id>
+      <wp:term_taxonomy>dssast_competition_category</wp:term_taxonomy>
+      <wp:term_slug>demo-workshop</wp:term_slug>
+      <wp:term_parent />
+      <wp:term_name>示例赛事</wp:term_name>
+    </wp:term>
+    <item>
+      <title>示例新闻1</title>
+      <link>https://dssast-demo.invalid/demo-workshop-recap/</link>
+      <dc:creator>admin</dc:creator>
+      <guid isPermaLink="false">https://dssast-demo.invalid/?p=101</guid>
+      <content:encoded>&lt;p&gt;测试&lt;/p&gt;</content:encoded>
+      <wp:post_id>101</wp:post_id>
+      <wp:post_date>2025-01-01 09:00:00</wp:post_date>
+      <wp:post_date_gmt>2025-01-01 09:00:00</wp:post_date_gmt>
+      <wp:comment_status>closed</wp:comment_status>
+      <wp:ping_status>closed</wp:ping_status>
+      <wp:post_name>demo-workshop-recap</wp:post_name>
+      <wp:status>publish</wp:status>
+      <wp:post_parent>0</wp:post_parent>
+      <wp:menu_order>0</wp:menu_order>
+      <wp:post_type>post</wp:post_type>
+      <wp:post_password />
+      <wp:is_sticky>0</wp:is_sticky>
+      <category domain="category" nicename="news">新闻</category>
+    </item>
+    <item>
+      <title>示例新闻2</title>
+      <link>https://dssast-demo.invalid/demo-project-showcase/</link>
+      <dc:creator>admin</dc:creator>
+      <guid isPermaLink="false">https://dssast-demo.invalid/?p=102</guid>
+      <content:encoded>&lt;p&gt;测试&lt;/p&gt;</content:encoded>
+      <wp:post_id>102</wp:post_id>
+      <wp:post_date>2025-01-01 09:00:00</wp:post_date>
+      <wp:post_date_gmt>2025-01-01 09:00:00</wp:post_date_gmt>
+      <wp:comment_status>closed</wp:comment_status>
+      <wp:ping_status>closed</wp:ping_status>
+      <wp:post_name>demo-project-showcase</wp:post_name>
+      <wp:status>publish</wp:status>
+      <wp:post_parent>0</wp:post_parent>
+      <wp:menu_order>0</wp:menu_order>
+      <wp:post_type>post</wp:post_type>
+      <wp:post_password />
+      <wp:is_sticky>0</wp:is_sticky>
+      <category domain="category" nicename="news">新闻</category>
+    </item>
+    <item>
+      <title>示例公告1</title>
+      <link>https://dssast-demo.invalid/demo-schedule/</link>
+      <dc:creator>admin</dc:creator>
+      <guid isPermaLink="false">https://dssast-demo.invalid/?p=103</guid>
+      <content:encoded>&lt;p&gt;测试&lt;/p&gt;</content:encoded>
+      <wp:post_id>103</wp:post_id>
+      <wp:post_date>2025-01-01 09:00:00</wp:post_date>
+      <wp:post_date_gmt>2025-01-01 09:00:00</wp:post_date_gmt>
+      <wp:comment_status>closed</wp:comment_status>
+      <wp:ping_status>closed</wp:ping_status>
+      <wp:post_name>demo-schedule</wp:post_name>
+      <wp:status>publish</wp:status>
+      <wp:post_parent>0</wp:post_parent>
+      <wp:menu_order>0</wp:menu_order>
+      <wp:post_type>post</wp:post_type>
+      <wp:post_password />
+      <wp:is_sticky>0</wp:is_sticky>
+      <category domain="category" nicename="announcements">公告</category>
+    </item>
+    <item>
+      <title>示例公告2</title>
+      <link>https://dssast-demo.invalid/demo-maintenance/</link>
+      <dc:creator>admin</dc:creator>
+      <guid isPermaLink="false">https://dssast-demo.invalid/?p=104</guid>
+      <content:encoded>&lt;p&gt;测试&lt;/p&gt;</content:encoded>
+      <wp:post_id>104</wp:post_id>
+      <wp:post_date>2025-01-01 09:00:00</wp:post_date>
+      <wp:post_date_gmt>2025-01-01 09:00:00</wp:post_date_gmt>
+      <wp:comment_status>closed</wp:comment_status>
+      <wp:ping_status>closed</wp:ping_status>
+      <wp:post_name>demo-maintenance</wp:post_name>
+      <wp:status>publish</wp:status>
+      <wp:post_parent>0</wp:post_parent>
+      <wp:menu_order>0</wp:menu_order>
+      <wp:post_type>post</wp:post_type>
+      <wp:post_password />
+      <wp:is_sticky>0</wp:is_sticky>
+      <category domain="category" nicename="announcements">公告</category>
+    </item>
+    <item>
+      <title>新闻</title>
+      <link>https://dssast-demo.invalid/news/</link>
+      <dc:creator>admin</dc:creator>
+      <guid isPermaLink="false">https://dssast-demo.invalid/?p=105</guid>
+      <content:encoded>[dssast_news category="dssast-news"]</content:encoded>
+      <wp:post_id>105</wp:post_id>
+      <wp:post_date>2025-01-01 09:00:00</wp:post_date>
+      <wp:post_date_gmt>2025-01-01 09:00:00</wp:post_date_gmt>
+      <wp:comment_status>closed</wp:comment_status>
+      <wp:ping_status>closed</wp:ping_status>
+      <wp:post_name>news</wp:post_name>
+      <wp:status>publish</wp:status>
+      <wp:post_parent>0</wp:post_parent>
+      <wp:menu_order>0</wp:menu_order>
+      <wp:post_type>page</wp:post_type>
+      <wp:post_password />
+      <wp:is_sticky>0</wp:is_sticky>
+    </item>
+    <item>
+      <title>公告</title>
+      <link>https://dssast-demo.invalid/announcements/</link>
+      <dc:creator>admin</dc:creator>
+      <guid isPermaLink="false">https://dssast-demo.invalid/?p=106</guid>
+      <content:encoded>[dssast_news category="dssast-announcement"]</content:encoded>
+      <wp:post_id>106</wp:post_id>
+      <wp:post_date>2025-01-01 09:00:00</wp:post_date>
+      <wp:post_date_gmt>2025-01-01 09:00:00</wp:post_date_gmt>
+      <wp:comment_status>closed</wp:comment_status>
+      <wp:ping_status>closed</wp:ping_status>
+      <wp:post_name>announcements</wp:post_name>
+      <wp:status>publish</wp:status>
+      <wp:post_parent>0</wp:post_parent>
+      <wp:menu_order>0</wp:menu_order>
+      <wp:post_type>page</wp:post_type>
+      <wp:post_password />
+      <wp:is_sticky>0</wp:is_sticky>
+    </item>
+    <item>
+      <title>赛事</title>
+      <link>https://dssast-demo.invalid/events/</link>
+      <dc:creator>admin</dc:creator>
+      <guid isPermaLink="false">https://dssast-demo.invalid/?p=107</guid>
+      <content:encoded>[dssast_competitions]</content:encoded>
+      <wp:post_id>107</wp:post_id>
+      <wp:post_date>2025-01-01 09:00:00</wp:post_date>
+      <wp:post_date_gmt>2025-01-01 09:00:00</wp:post_date_gmt>
+      <wp:comment_status>closed</wp:comment_status>
+      <wp:ping_status>closed</wp:ping_status>
+      <wp:post_name>events</wp:post_name>
+      <wp:status>publish</wp:status>
+      <wp:post_parent>0</wp:post_parent>
+      <wp:menu_order>0</wp:menu_order>
+      <wp:post_type>page</wp:post_type>
+      <wp:post_password />
+      <wp:is_sticky>0</wp:is_sticky>
+    </item>
+    <item>
+      <title>笔记</title>
+      <link>https://dssast-demo.invalid/notes/</link>
+      <dc:creator>admin</dc:creator>
+      <guid isPermaLink="false">https://dssast-demo.invalid/?p=108</guid>
+      <content:encoded>[dssast_notes]
+
+[dssast_note_submit]</content:encoded>
+      <wp:post_id>108</wp:post_id>
+      <wp:post_date>2025-01-01 09:00:00</wp:post_date>
+      <wp:post_date_gmt>2025-01-01 09:00:00</wp:post_date_gmt>
+      <wp:comment_status>closed</wp:comment_status>
+      <wp:ping_status>closed</wp:ping_status>
+      <wp:post_name>notes</wp:post_name>
+      <wp:status>publish</wp:status>
+      <wp:post_parent>0</wp:post_parent>
+      <wp:menu_order>0</wp:menu_order>
+      <wp:post_type>page</wp:post_type>
+      <wp:post_password />
+      <wp:is_sticky>0</wp:is_sticky>
+    </item>
+    <item>
+      <title>示例笔记：检查网页布局</title>
+      <link>https://dssast-demo.invalid/demo-browser-note/</link>
+      <dc:creator>admin</dc:creator>
+      <guid isPermaLink="false">https://dssast-demo.invalid/?p=109</guid>
+      <content:encoded>&lt;p&gt;打开开发者工具，检查元素的盒模型，再切换移动端视口。&lt;/p&gt;</content:encoded>
+      <wp:post_id>109</wp:post_id>
+      <wp:post_date>2025-01-01 09:00:00</wp:post_date>
+      <wp:post_date_gmt>2025-01-01 09:00:00</wp:post_date_gmt>
+      <wp:comment_status>closed</wp:comment_status>
+      <wp:ping_status>closed</wp:ping_status>
+      <wp:post_name>demo-browser-note</wp:post_name>
+      <wp:status>publish</wp:status>
+      <wp:post_parent>0</wp:post_parent>
+      <wp:menu_order>0</wp:menu_order>
+      <wp:post_type>dssast_note</wp:post_type>
+      <wp:post_password />
+      <wp:is_sticky>0</wp:is_sticky>
+    </item>
+    <item>
+      <title>示例笔记：待修改的草稿</title>
+      <link>https://dssast-demo.invalid/demo-review-draft/</link>
+      <dc:creator>admin</dc:creator>
+      <guid isPermaLink="false">https://dssast-demo.invalid/?p=110</guid>
+      <content:encoded>&lt;p&gt;用于验证草稿编辑和审核意见。&lt;/p&gt;</content:encoded>
+      <wp:post_id>110</wp:post_id>
+      <wp:post_date>2025-01-01 09:00:00</wp:post_date>
+      <wp:post_date_gmt>2025-01-01 09:00:00</wp:post_date_gmt>
+      <wp:comment_status>closed</wp:comment_status>
+      <wp:ping_status>closed</wp:ping_status>
+      <wp:post_name>demo-review-draft</wp:post_name>
+      <wp:status>draft</wp:status>
+      <wp:post_parent>0</wp:post_parent>
+      <wp:menu_order>0</wp:menu_order>
+      <wp:post_type>dssast_note</wp:post_type>
+      <wp:post_password />
+      <wp:is_sticky>0</wp:is_sticky>
+      <wp:postmeta>
+        <wp:meta_key>dssast_review_reason</wp:meta_key>
+        <wp:meta_value>示例审核意见：补充复现步骤。</wp:meta_value>
+      </wp:postmeta>
+    </item>
+    <item>
+      <title>赛事测试</title>
+      <link>https://dssast-demo.invalid/demo-interface-challenge/</link>
+      <dc:creator>admin</dc:creator>
+      <guid isPermaLink="false">https://dssast-demo.invalid/?p=111</guid>
+      <content:encoded>&lt;p&gt;测试。&lt;/p&gt;</content:encoded>
+      <wp:post_id>111</wp:post_id>
+      <wp:post_date>2025-01-01 09:00:00</wp:post_date>
+      <wp:post_date_gmt>2025-01-01 09:00:00</wp:post_date_gmt>
+      <wp:comment_status>closed</wp:comment_status>
+      <wp:ping_status>closed</wp:ping_status>
+      <wp:post_name>demo-interface-challenge</wp:post_name>
+      <wp:status>publish</wp:status>
+      <wp:post_parent>0</wp:post_parent>
+      <wp:menu_order>0</wp:menu_order>
+      <wp:post_type>dssast_competition</wp:post_type>
+      <wp:post_password />
+      <wp:is_sticky>0</wp:is_sticky>
+      <category domain="dssast_competition_category" nicename="demo-workshop">示例技能赛</category>
+      <wp:postmeta>
+        <wp:meta_key>dssast_status</wp:meta_key>
+        <wp:meta_value>open</wp:meta_value>
+      </wp:postmeta>
+      <wp:postmeta>
+        <wp:meta_key>dssast_date</wp:meta_key>
+        <wp:meta_value>2030-05-20</wp:meta_value>
+      </wp:postmeta>
+      <wp:postmeta>
+        <wp:meta_key>dssast_registration_start</wp:meta_key>
+        <wp:meta_value>2030-05-01T09:00</wp:meta_value>
+      </wp:postmeta>
+      <wp:postmeta>
+        <wp:meta_key>dssast_registration_end</wp:meta_key>
+        <wp:meta_value>2030-05-15T18:00</wp:meta_value>
+      </wp:postmeta>
+      <wp:postmeta>
+        <wp:meta_key>dssast_registration_url</wp:meta_key>
+        <wp:meta_value>https://dssast-demo.invalid/registration/</wp:meta_value>
+      </wp:postmeta>
+    </item>
+  </channel>
+</rss>

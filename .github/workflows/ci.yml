@@ -1,0 +1,101 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  theme-build:
+    name: Build theme assets
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: themes/dssast
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: themes/dssast/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dssast-theme-assets
+          path: |
+            themes/dssast/dist/app.css
+            themes/dssast/dist/app.js
+          if-no-files-found: error
+
+  php-lint:
+    name: PHP syntax
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          coverage: none
+      - name: Lint tracked PHP files
+        shell: bash
+        run: git ls-files -z -- '*.php' | xargs -0 -r -n 1 php -l
+
+  deploy:
+    name: Deploy
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: [theme-build, php-lint]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: wordpress-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v8
+        with:
+          name: dssast-theme-assets
+          path: ${{ runner.temp }}/dssast-theme-assets
+      - name: Upload theme and plugins over SSH
+        shell: bash
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST || 'dssast.cn' }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: /var/www/html/wp-content
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          if [[ -z "$DEPLOY_SSH_KEY" || -z "$DEPLOY_KNOWN_HOSTS" ]]; then
+            echo '::error::Set the DEPLOY_SSH_KEY and DEPLOY_KNOWN_HOSTS repository secrets.'
+            exit 1
+          fi
+
+          work_dir=$(mktemp -d "$RUNNER_TEMP/dssast-deploy.XXXXXX")
+          trap 'rm -rf -- "$work_dir"' EXIT
+          payload="$work_dir/wp-content"
+          mkdir "$payload"
+          git archive HEAD themes/dssast plugins | tar -xf - -C "$payload"
+          mkdir -p "$payload/themes/dssast/dist"
+          install -m 644 "$RUNNER_TEMP/dssast-theme-assets/"{app.css,app.js} "$payload/themes/dssast/dist/"
+
+          install -m 600 /dev/null "$work_dir/ssh_key"
+          printf '%s\n' "$DEPLOY_SSH_KEY" | tr -d '\r' > "$work_dir/ssh_key"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" | tr -d '\r' > "$work_dir/known_hosts"
+          export RSYNC_RSH="ssh -i '$work_dir/ssh_key' -o UserKnownHostsFile='$work_dir/known_hosts' -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=10"
+
+          rsync -rtO --secluded-args --delay-updates --itemize-changes \
+            --rsync-path="test -d '$DEPLOY_PATH/themes' && test -d '$DEPLOY_PATH/plugins' && rsync" \
+            -- "$payload/" "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"

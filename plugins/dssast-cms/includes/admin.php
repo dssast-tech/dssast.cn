@@ -9,23 +9,56 @@ add_action( 'admin_menu', function () {
         'dssast-management',
         'dssast_management_page',
         'dashicons-welcome-write-blog',
-        25
+        26
     );
     add_action( 'load-' . $dashboard, 'dssast_enqueue_admin_style' );
 
-    foreach ( dssast_management_views() as $key => $view ) {
+    $views = dssast_management_views();
+    $notes_menu = 'edit.php?post_type=dssast_note';
+    remove_submenu_page( $notes_menu, $notes_menu );
+    foreach ( array( 'notes', 'pending' ) as $position => $key ) {
+        $view = $views[ $key ];
         $screen = add_submenu_page(
-            'dssast-management',
+            $notes_menu,
             $view['title'],
             $view['title'],
             'manage_options',
             'dssast-view-' . $key,
-            function () use ( $key ) { dssast_management_list( $key ); }
+            function () use ( $key ) { dssast_management_list( $key ); },
+            $position
         );
         if ( $screen ) {
-            add_action( 'load-' . $screen, 'dssast_enqueue_admin_style' );
+            add_action( 'load-' . $screen, function () use ( $key ) {
+                dssast_enqueue_admin_style();
+                add_filter( 'submenu_file', function () use ( $key ) { return 'dssast-view-' . $key; } );
+            } );
         }
     }
+
+    $editorial = array(
+        'news' => array( '新闻列表', '添加新闻', 'dashicons-media-document', 29 ),
+        'announcements' => array( '公告列表', '添加公告', 'dashicons-megaphone', 30 ),
+    );
+    foreach ( $editorial as $key => list( $list_label, $add_label, $icon, $position ) ) {
+        $view = $views[ $key ];
+        $slug = 'dssast-view-' . $key;
+        $screen = add_menu_page(
+            $view['title'],
+            $view['title'],
+            'manage_options',
+            $slug,
+            function () use ( $key ) { dssast_management_list( $key ); },
+            $icon,
+            $position
+        );
+        add_action( 'load-' . $screen, 'dssast_enqueue_admin_style' );
+        add_submenu_page( $slug, $view['title'], $list_label, 'manage_options', $slug );
+        $composer = dssast_new_content_page( $view );
+        if ( $composer ) {
+            add_submenu_page( $slug, $add_label, $add_label, 'manage_options', $composer );
+        }
+    }
+    add_submenu_page( 'dssast-view-news', '秀米同步', '秀米同步', 'manage_options', 'dssast-xiumi-news', 'dssast_xiumi_page' );
 } );
 
 function dssast_enqueue_admin_style() {
@@ -38,14 +71,23 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
         $screen && in_array( $screen->post_type, array( 'dssast_competition', 'dssast_note' ), true ) ) {
         dssast_enqueue_admin_style();
     }
+    if ( 'edit.php' === $hook && $screen && 'dssast_competition' === $screen->post_type ) {
+        wp_enqueue_script(
+            'dssast-competition-quick-edit',
+            plugins_url( 'assets/competition-quick-edit.js', DSSAST_CMS_FILE ),
+            array( 'inline-edit-post' ),
+            DSSAST_CMS_VERSION,
+            true
+        );
+    }
 } );
 
 function dssast_management_views() {
     return array(
         'notes' => array( 'title' => '全部笔记', 'type' => 'dssast_note', 'category' => '' ),
         'pending' => array( 'title' => '待审核笔记', 'type' => 'dssast_note', 'category' => '' ),
-        'news' => array( 'title' => '新闻管理', 'type' => 'post', 'category' => 'news' ),
-        'announcements' => array( 'title' => '公告管理', 'type' => 'post', 'category' => 'announcements' ),
+        'news' => array( 'title' => '新闻管理', 'type' => 'post', 'category' => 'dssast-news' ),
+        'announcements' => array( 'title' => '公告管理', 'type' => 'post', 'category' => 'dssast-announcement' ),
     );
 }
 
@@ -53,13 +95,18 @@ function dssast_view_url( $key ) {
     return add_query_arg( 'page', 'dssast-view-' . $key, admin_url( 'admin.php' ) );
 }
 
-function dssast_new_content_url( $view ) {
+function dssast_new_content_page( $view ) {
     if ( ! $view['category'] ) {
-        return add_query_arg( 'post_type', $view['type'], admin_url( 'post-new.php' ) );
+        return add_query_arg( 'post_type', $view['type'], 'post-new.php' );
     }
 
-    $term = get_term_by( 'slug', $view['category'], 'category' );
-    return $term ? add_query_arg( 'dssast_category', $term->term_id, admin_url( 'post-new.php' ) ) : '';
+    $term = dssast_editorial_category( $view['category'] );
+    return $term ? add_query_arg( 'dssast_category', $term->term_id, 'post-new.php' ) : '';
+}
+
+function dssast_new_content_url( $view ) {
+    $page = dssast_new_content_page( $view );
+    return $page ? admin_url( $page ) : '';
 }
 
 // Select the category on the actual auto-draft read by both WordPress editors.
@@ -71,9 +118,17 @@ add_action( 'load-post-new.php', function () {
     }
 
     $term = get_term( absint( $_GET['dssast_category'] ), 'category' );
-    if ( ! $term || is_wp_error( $term ) || ! in_array( $term->slug, array( 'news', 'announcements' ), true ) ) {
+    $news = dssast_editorial_category( 'dssast-news' );
+    $announcement = dssast_editorial_category( 'dssast-announcement' );
+    if ( ! $term || is_wp_error( $term ) || ! in_array( $term->term_id, array( $news->term_id ?? 0, $announcement->term_id ?? 0 ), true ) ) {
         return;
     }
+
+    $view = $term->term_id === ( $news->term_id ?? 0 ) ? 'news' : 'announcements';
+    add_filter( 'parent_file', function () use ( $view ) { return 'dssast-view-' . $view; } );
+    add_filter( 'submenu_file', function () use ( $term ) {
+        return add_query_arg( 'dssast_category', $term->term_id, 'post-new.php' );
+    } );
 
     add_action( 'wp_after_insert_post', function ( $id, $post, $update ) use ( $term ) {
         if ( ! $update && 'post' === $post->post_type && 'auto-draft' === $post->post_status ) {
@@ -90,58 +145,97 @@ function dssast_management_page() {
     $views = dssast_management_views();
     $pending = (int) ( wp_count_posts( 'dssast_note' )->pending ?? 0 );
     $events = (int) ( wp_count_posts( 'dssast_competition' )->publish ?? 0 );
+    $event_list = add_query_arg( 'post_type', 'dssast_competition', admin_url( 'edit.php' ) );
     $new_event = add_query_arg( 'post_type', 'dssast_competition', admin_url( 'post-new.php' ) );
+    $stats = array(
+        array( '待审核笔记', $pending, dssast_view_url( 'pending' ) ),
+        array( '已发布赛事', $events, add_query_arg( 'post_status', 'publish', $event_list ) ),
+    );
     $cards = array(
-        array( '赛事', 'awards', '维护赛事介绍、报名时间和链接。', '赛事列表',
-            add_query_arg( 'post_type', 'dssast_competition', admin_url( 'edit.php' ) ), '添加赛事', $new_event ),
-        array( '学习笔记', 'book-alt', '查看投稿，填写审核意见并发布。', '全部笔记',
-            dssast_view_url( 'notes' ), '添加笔记', dssast_new_content_url( $views['notes'] ) ),
-        array( '新闻', 'media-document', '编辑活动报道和秀米同步草稿。', '新闻管理',
-            dssast_view_url( 'news' ), '添加新闻', dssast_new_content_url( $views['news'] ) ),
-        array( '公告', 'megaphone', '发布对外通知和重要提醒。', '公告管理',
-            dssast_view_url( 'announcements' ), '添加公告', dssast_new_content_url( $views['announcements'] ) ),
+        'events' => array(
+            'title' => '赛事管理',
+            'icon' => 'awards',
+            'description' => '维护赛事介绍、进度、报名时间和链接。',
+            'primary' => array( '赛事列表', $event_list ),
+            'actions' => array(
+                array( '添加赛事', $new_event ),
+                array( '赛事分类', admin_url( 'edit-tags.php?taxonomy=dssast_competition_category&post_type=dssast_competition' ) ),
+            ),
+        ),
+        'notes' => array(
+            'title' => '学习笔记',
+            'icon' => 'book-alt',
+            'description' => '审核学生投稿，填写反馈并发布笔记。',
+            'primary' => array( '待审核笔记', dssast_view_url( 'pending' ) ),
+            'actions' => array(
+                array( '全部笔记', dssast_view_url( 'notes' ) ),
+                array( '添加笔记', dssast_new_content_url( $views['notes'] ) ),
+            ),
+        ),
+        'news' => array(
+            'title' => '新闻管理',
+            'icon' => 'media-document',
+            'description' => '编辑活动报道和秀米导入的新闻稿件。',
+            'primary' => array( '新闻列表', dssast_view_url( 'news' ) ),
+            'actions' => array( array( '添加新闻', dssast_new_content_url( $views['news'] ) ) ),
+        ),
+        'announcements' => array(
+            'title' => '公告管理',
+            'icon' => 'megaphone',
+            'description' => '发布对外通知和重要提醒。',
+            'primary' => array( '公告列表', dssast_view_url( 'announcements' ) ),
+            'actions' => array( array( '添加公告', dssast_new_content_url( $views['announcements'] ) ) ),
+        ),
     );
     ?>
-    <div class="wrap dssast-admin">
-        <h1 class="wp-heading-inline">内容管理</h1>
+    <div class="wrap dssast-admin dssast-workbench">
         <hr class="wp-header-end">
         <section class="dssast-overview" aria-labelledby="dssast-overview-title">
-            <div>
-                <h2 id="dssast-overview-title">科协内容工作台</h2>
-                <p>管理赛事与报名、审核学生笔记、发布新闻和公告。</p>
-                <div class="dssast-actions">
-                    <a class="dssast-hero-link" href="<?php echo esc_url( $new_event ); ?>">添加赛事</a>
-                    <a class="dssast-hero-link dssast-hero-link-secondary" href="<?php echo esc_url( dssast_view_url( 'pending' ) ); ?>">审核笔记</a>
-                </div>
+            <div class="dssast-overview-title">
+                <p>笃实书院学生科协</p>
+                <h1 id="dssast-overview-title">内容管理工作台</h1>
             </div>
-            <dl class="dssast-overview-stats">
-                <div><dt>待审核笔记</dt><dd><?php echo esc_html( number_format_i18n( $pending ) ); ?></dd></div>
-                <div><dt>已发布赛事</dt><dd><?php echo esc_html( number_format_i18n( $events ) ); ?></dd></div>
-            </dl>
+            <div class="dssast-overview-stats">
+                <?php foreach ( $stats as list( $label, $count, $url ) ) : ?>
+                    <a class="dssast-stat" href="<?php echo esc_url( $url ); ?>">
+                        <span><?php echo esc_html( $label ); ?></span>
+                        <strong><?php echo esc_html( number_format_i18n( $count ) ); ?></strong>
+                        <span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span>
+                    </a>
+                <?php endforeach; ?>
+            </div>
         </section>
         <div class="dssast-card-grid">
-            <?php foreach ( $cards as list( $title, $icon, $description, $list_label, $list_url, $add_label, $add_url ) ) : ?>
-                <section class="dssast-card">
-                    <span class="dssast-icon dashicons dashicons-<?php echo esc_attr( $icon ); ?>" aria-hidden="true"></span>
-                    <h2><?php echo esc_html( $title ); ?></h2>
-                    <p><?php echo esc_html( $description ); ?></p>
-                    <div class="dssast-card-actions">
-                        <a class="dssast-text-link" href="<?php echo esc_url( $list_url ); ?>"><?php echo esc_html( $list_label ); ?><span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span></a>
-                        <?php if ( $add_url ) : ?>
-                            <a class="dssast-secondary-link" href="<?php echo esc_url( $add_url ); ?>"><?php echo esc_html( $add_label ); ?></a>
-                        <?php endif; ?>
+            <?php foreach ( $cards as $key => $card ) :
+                $heading_id = 'dssast-card-' . $key;
+                list( $label, $url ) = $card['primary'];
+                ?>
+                <section class="dssast-card" aria-labelledby="<?php echo esc_attr( $heading_id ); ?>">
+                    <span class="dssast-icon dashicons dashicons-<?php echo esc_attr( $card['icon'] ); ?>" aria-hidden="true"></span>
+                    <div class="dssast-card-heading">
+                        <h2 id="<?php echo esc_attr( $heading_id ); ?>"><?php echo esc_html( $card['title'] ); ?></h2>
+                        <p><?php echo esc_html( $card['description'] ); ?></p>
                     </div>
+                    <div class="dssast-card-actions">
+                        <a class="dssast-card-primary" href="<?php echo esc_url( $url ); ?>">
+                            <?php echo esc_html( $label ); ?><span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span>
+                        </a>
+                        <?php foreach ( $card['actions'] as list( $label, $url ) ) : ?>
+                            <?php if ( $url ) : ?>
+                                <a class="dssast-text-link" href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $label ); ?></a>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php if ( 'news' === $key ) : ?>
+                        <a class="dssast-sync" href="<?php echo esc_url( admin_url( 'admin.php?page=dssast-xiumi-news' ) ); ?>">
+                            <span class="dashicons dashicons-update" aria-hidden="true"></span>
+                            <span><strong>秀米同步</strong><small>导入稿件进入新闻草稿</small></span>
+                            <span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span>
+                        </a>
+                    <?php endif; ?>
                 </section>
             <?php endforeach; ?>
         </div>
-        <section class="dssast-sync">
-            <span class="dssast-icon dashicons dashicons-update" aria-hidden="true"></span>
-            <div>
-                <h2>秀米同步</h2>
-                <p>从秀米导入的稿件进入新闻草稿，审核后发布。</p>
-            </div>
-            <a class="dssast-text-link" href="<?php echo esc_url( admin_url( 'tools.php?page=dssast-xiumi' ) ); ?>">同步设置<span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span></a>
-        </section>
     </div>
     <?php
 }
@@ -169,7 +263,7 @@ function dssast_management_list( $key ) {
         'update_post_meta_cache' => false,
     );
     if ( $view['category'] ) {
-        $term = get_term_by( 'slug', $view['category'], 'category' );
+        $term = dssast_editorial_category( $view['category'] );
         if ( $term ) {
             $args['cat'] = (int) $term->term_id;
         } else {
@@ -301,3 +395,34 @@ add_action( 'manage_dssast_competition_posts_custom_column', function ( $column,
         echo esc_html( is_string( $date ) && '' !== $date ? $date : '—' );
     }
 }, 10, 2 );
+
+add_action( 'quick_edit_custom_box', function ( $column, $post_type ) {
+    if ( 'dssast_status' !== $column || 'dssast_competition' !== $post_type || ! current_user_can( 'manage_options' ) ) {
+        return;
+    }
+    ?>
+    <fieldset class="dssast-competition-quick-edit" disabled hidden>
+        <legend class="inline-edit-legend">赛事信息</legend>
+        <p class="description">时间采用站点时区 <?php echo esc_html( wp_timezone_string() ); ?>。</p>
+        <input type="hidden" name="dssast_nonce">
+        <div class="dssast-fields">
+            <?php foreach ( dssast_fields() as $field => $label ) : ?>
+                <label class="dssast-field<?php echo 'registration_url' === $field ? ' dssast-field-wide' : ''; ?>">
+                    <span><?php echo esc_html( $label ); ?></span>
+                    <?php dssast_competition_field_control( $field, '' ); ?>
+                </label>
+            <?php endforeach; ?>
+        </div>
+    </fieldset>
+    <?php
+}, 10, 2 );
+
+add_action( 'add_inline_data', function ( $post ) {
+    if ( 'dssast_competition' !== $post->post_type || ! current_user_can( 'manage_options' ) ) {
+        return;
+    }
+    $values = dssast_competition_values( $post->ID );
+    $values['dssast_nonce'] = wp_create_nonce( 'dssast_save_' . $post->ID );
+    $json = wp_json_encode( $values, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT );
+    echo '<div class="dssast-quick-edit-data" data-fields="' . esc_attr( $json ) . '"></div>';
+} );

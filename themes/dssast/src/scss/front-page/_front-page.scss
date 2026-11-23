@@ -1,5 +1,4 @@
 @use "../variables" as *;
-@use "announcements";
 @forward "hero";
 
 .front-page {
@@ -18,18 +17,6 @@
         font-size: 2.8rem;
         margin-right: 1rem;
       }
-    }
-
-    .latest-title {
-      display: flex;
-      place-items: center end;
-      justify-content: space-between;
-    }
-  
-    .latest-list {
-      display: flex;
-      place-items: center end;
-      justify-content: space-between;
     }
   }
 

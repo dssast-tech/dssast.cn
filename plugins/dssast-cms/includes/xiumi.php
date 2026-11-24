@@ -84,6 +84,7 @@ function dssast_xiumi_html( $request ) {
  return array( 'code' => 0 );
 }
 function dssast_xiumi_image( $request ) {
+ global $wpdb;
  $uid = dssast_xiumi_bound_user( $request );
  if ( ! $uid ) { return dssast_xiumi_fail( 'dssast_binding', 403 ); }
  $files = $request->get_file_params(); $file = $files['img-upload'] ?? null;
@@ -91,8 +92,18 @@ function dssast_xiumi_image( $request ) {
  $info = wp_getimagesize( $file['tmp_name'] );
  $types = array( 'image/jpeg' => 'jpg', 'image/png' => 'png', 'image/gif' => 'gif', 'image/webp' => 'webp' );
  if ( ! $info || ! isset( $types[$info['mime']] ) || $info[0] * $info[1] > 20000000 ) { return dssast_xiumi_fail( 'dssast_image_type' ); }
- $hash = hash_file( 'sha256', $file['tmp_name'] ); $lock = 'dssast_image_lock_' . $uid;
- if ( ! add_option( $lock, time(), '', false ) ) { return dssast_xiumi_fail( 'dssast_busy', 409 ); }
+ $hash = hash_file( 'sha256', $file['tmp_name'] );
+ $lock = 'dssast_image_lock_' . $uid . '_' . $hash;
+ // Xiumi uploads different images in parallel. Atomically lock only identical images.
+ $lock_query = $wpdb->prepare( "INSERT IGNORE INTO {$wpdb->options} (option_name, option_value, autoload) VALUES (%s, '1', 'no')", $lock );
+ $deadline = microtime( true ) + 5;
+ $locked = $wpdb->query( $lock_query );
+ while ( 0 === $locked && microtime( true ) < $deadline ) {
+  usleep( 100000 );
+  $locked = $wpdb->query( $lock_query );
+ }
+ if ( false === $locked ) { return dssast_xiumi_fail( 'dssast_image_lock', 500 ); }
+ if ( 1 !== $locked ) { return dssast_xiumi_fail( 'dssast_busy', 409 ); }
  try {
   $old = get_posts( array( 'post_type' => 'attachment', 'post_status' => 'inherit', 'author' => $uid, 'meta_key' => 'dssast_xiumi_image_hash', 'meta_value' => $hash, 'numberposts' => 1 ) );
   if ( $old ) { return array( 'code' => 0, 'data' => array( 'url' => wp_get_attachment_url( $old[0]->ID ) ) ); }

@@ -1,0 +1,319 @@
+{
+  "courses": {
+    "操作系统": [
+      {
+        "title": "复习提纲",
+        "url": "https://ssast-readme.github.io/note/os/os/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "Kirino"
+      },
+      {
+        "title": "2024春复习提纲",
+        "url": "https://ssast-readme.github.io/note/os/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B0_2024%E6%98%A5/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "软小宣（大作业的玩物版）",
+        "term": "2024 春"
+      }
+    ],
+    "人工智能导论": [
+      {
+        "title": "Learning(1)",
+        "url": "https://ssast-readme.github.io/note/IAI/AI-learning1/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "Kirino"
+      }
+    ],
+    "机器学习": [
+      {
+        "title": "计算学习理论 (1)",
+        "url": "https://ssast-readme.github.io/note/ml/%E8%AE%A1%E7%AE%97%E5%AD%A6%E4%B9%A0%E7%90%86%E8%AE%BA%20%281%29/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "光火"
+      },
+      {
+        "title": "计算学习理论 (2)",
+        "url": "https://ssast-readme.github.io/note/ml/%E8%AE%A1%E7%AE%97%E5%AD%A6%E4%B9%A0%E7%90%86%E8%AE%BA%20%282%29/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "光火"
+      }
+    ],
+    "数据结构": [
+      {
+        "title": "数据结构复习要点",
+        "url": "https://ssast-readme.github.io/note/data_structure/data_structure_review_notes_1/",
+        "formats": [
+          "PDF"
+        ],
+        "credit": "August",
+        "attachments": 1
+      },
+      {
+        "title": "数据结构复习笔记",
+        "url": "https://ssast-readme.github.io/note/data_structure/data_structure_review_notes_2/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿"
+      },
+      {
+        "title": "数据结构期末复习",
+        "url": "https://ssast-readme.github.io/note/data_structure/DSA_cracker/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "lurf21"
+      }
+    ],
+    "算法设计与分析": [
+      {
+        "title": "算法设计与分析复习",
+        "url": "https://ssast-readme.github.io/note/algorithm/%E7%AE%97%E6%B3%95%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B0_24%E6%98%A5/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "软小宣（大作业的玩物版）",
+        "term": "2024 春"
+      }
+    ],
+    "数字电子技术基础 C": [
+      {
+        "title": "数字电子技术基础复习要点",
+        "url": "https://ssast-readme.github.io/note/digital_circuit/digital_notes/",
+        "formats": [
+          "PDF"
+        ],
+        "credit": "August",
+        "attachments": 1
+      }
+    ],
+    "复变函数引论": [
+      {
+        "title": "复变笔记",
+        "url": "https://ssast-readme.github.io/note/complex-function/readme/",
+        "formats": [
+          "PDF"
+        ],
+        "credit": "glassesq",
+        "attachments": 7
+      }
+    ],
+    "数据库": [
+      {
+        "title": "第六章 E-R 模型",
+        "url": "https://ssast-readme.github.io/note/database/Chapter6/Chapter%206%20%20Database%20Design%20Using%20the%20E-R%20Model/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "弗畔"
+      },
+      {
+        "title": "第七章关系数据库设计",
+        "url": "https://ssast-readme.github.io/note/database/Chapter7/Chapter%207/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "弗畔"
+      }
+    ],
+    "贵系 Rust 小学期": [
+      {
+        "title": "Rust 课程笔记 L1",
+        "url": "https://ssast-readme.github.io/note/Rust/rustL1/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿",
+        "term": "2022 夏"
+      },
+      {
+        "title": "Rust 课程笔记 L2",
+        "url": "https://ssast-readme.github.io/note/Rust/rustL2/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿",
+        "term": "2022 夏"
+      },
+      {
+        "title": "Rust 课程笔记 L3",
+        "url": "https://ssast-readme.github.io/note/Rust/rustL3/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿",
+        "term": "2022 夏"
+      },
+      {
+        "title": "Rust 课程笔记 L4",
+        "url": "https://ssast-readme.github.io/note/Rust/rustL4/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿",
+        "term": "2022 夏"
+      },
+      {
+        "title": "Rust 课程笔记 L5",
+        "url": "https://ssast-readme.github.io/note/Rust/rustL5/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿",
+        "term": "2022 夏"
+      },
+      {
+        "title": "Rust 课程笔记 L6",
+        "url": "https://ssast-readme.github.io/note/Rust/rustL6/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿",
+        "term": "2022 夏"
+      },
+      {
+        "title": "Rust 课程笔记 L7",
+        "url": "https://ssast-readme.github.io/note/Rust/rustL7/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿",
+        "term": "2022 夏"
+      }
+    ],
+    "微积分 A2": [
+      {
+        "title": "第一讲多元函数的连续性",
+        "url": "https://ssast-readme.github.io/note/calculus/A2L1/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿"
+      },
+      {
+        "title": "第二讲多元函数的极限",
+        "url": "https://ssast-readme.github.io/note/calculus/A2L2/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿"
+      },
+      {
+        "title": "第三讲多元函数的导数和微分",
+        "url": "https://ssast-readme.github.io/note/calculus/A2L3/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿"
+      },
+      {
+        "title": "第四讲高阶导数与泰勒公式",
+        "url": "https://ssast-readme.github.io/note/calculus/A2L4/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿"
+      },
+      {
+        "title": "第五讲极值、临界点",
+        "url": "https://ssast-readme.github.io/note/calculus/A2L5/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿"
+      }
+    ],
+    "大学物理 B2": [
+      {
+        "title": "大学物理 B2 笔记整理",
+        "url": "https://ssast-readme.github.io/note/physics/physics/",
+        "formats": [
+          "PDF",
+          "DOCX"
+        ],
+        "credit": "多位作者，逐件署名见原页",
+        "attachments": 7
+      }
+    ],
+    "初等概率论": [
+      {
+        "title": "初等概率论课程笔记",
+        "url": "https://ssast-readme.github.io/note/probability/probability/",
+        "formats": [
+          "PDF"
+        ],
+        "credit": "文荆",
+        "attachments": 3
+      }
+    ],
+    "初等数论": [
+      {
+        "title": "第一章",
+        "url": "https://ssast-readme.github.io/note/number-theory/theoryL1/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿"
+      },
+      {
+        "title": "第二章",
+        "url": "https://ssast-readme.github.io/note/number-theory/theoryL2/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿"
+      },
+      {
+        "title": "第三章",
+        "url": "https://ssast-readme.github.io/note/number-theory/theoryL3/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿"
+      }
+    ],
+    "抽象代数学": [
+      {
+        "title": "抽象代数学课程笔记",
+        "url": "https://ssast-readme.github.io/note/abstract_algebra/abstract_algebra_notes/",
+        "formats": [
+          "在线图文"
+        ],
+        "credit": "鲁睿"
+      }
+    ],
+    "推研机试整理": [
+      {
+        "title": "推研机试整理",
+        "url": "https://ssast-readme.github.io/note/graduate_recommendation/graduate_recommendation/",
+        "formats": [
+          "PDF"
+        ],
+        "attachments": 1
+      }
+    ]
+  },
+  "related": [
+    {
+      "title": "2022 年暑培 · Git 讲义与录屏",
+      "url": "https://ssast-readme.github.io/tech/2022Summer/git/git/"
+    },
+    {
+      "title": "星火计划 · 参与心得",
+      "url": "https://ssast-readme.github.io/innovation/star/share/"
+    },
+    {
+      "title": "书信传情（2021）· 往届同学来信",
+      "url": "https://ssast-readme.github.io/letter/ReadMe%20X%20%E4%B9%A6%E4%BF%A1%E4%BC%A0%E6%83%852021%E7%AE%80%E4%BB%8B/"
+    }
+  ]
+}

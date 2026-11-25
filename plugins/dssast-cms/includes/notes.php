@@ -7,14 +7,27 @@ function dssast_register_notes() {
  register_post_type( 'dssast_note', array( 'labels' => array( 'name' => '学习笔记', 'singular_name' => '笔记', 'add_new_item' => '添加笔记', 'edit_item' => '编辑笔记' ), 'menu_icon' => 'dashicons-book-alt', 'menu_position' => 28, 'public' => true, 'show_in_rest' => true, 'has_archive' => 'dssast-notes', 'rewrite' => array( 'slug' => 'notes' ), 'supports' => array( 'title', 'editor', 'author', 'revisions' ), 'capabilities' => $caps, 'map_meta_cap' => true ) );
 }
 add_action( 'init', 'dssast_register_notes' );
+add_action( 'pre_get_posts', function ( $query ) {
+    if ( ! is_admin() && $query->is_main_query() && $query->is_post_type_archive( 'dssast_note' ) ) {
+        $query->set( 'post_status', 'publish' );
+        $query->set( 'has_password', false );
+    }
+} );
 add_action( 'template_redirect', function () {
     $page = get_queried_object();
-    if ( is_singular() && $page instanceof WP_Post && has_shortcode( $page->post_content, 'dssast_note_submit' ) ) {
+    if ( is_page( 'note-submit' ) || ( is_singular() && $page instanceof WP_Post && has_shortcode( $page->post_content, 'dssast_note_submit' ) ) ) {
         nocache_headers();
     }
 } );
 
 add_shortcode( 'dssast_note_submit', function () {
+ // Older installations may have placed both shortcodes on the public directory.
+ if ( is_page( 'notes' ) ) {
+  $submission = get_page_by_path( 'note-submit' );
+  if ( $submission && 'publish' === $submission->post_status ) {
+   return '<p><a href="' . esc_url( get_permalink( $submission ) ) . '">进入笔记投稿页</a></p>';
+  }
+ }
  if ( ! is_user_logged_in() ) { return '<p>请先<a href="' . esc_url( wp_login_url( get_permalink() ) ) . '">登录</a>再投稿。</p>'; }
  if ( ! current_user_can( 'read' ) ) { return '<p>当前账号不可投稿。</p>'; }
  // The post type already registers dssast_note as a public query variable.
@@ -22,17 +35,20 @@ add_shortcode( 'dssast_note_submit', function () {
  $note = $id ? get_post( $id ) : null;
  if ( $id && ( ! $note || 'dssast_note' !== $note->post_type || (int) $note->post_author !== get_current_user_id() || 'draft' !== $note->post_status ) ) { return '<p>此笔记不可修改。</p>'; }
  ob_start();
- echo '<div class="dssast-note-submit"><p>提交后由管理员审核。仅可修改退回的笔记；不支持文件上传。正文支持基本 HTML。</p>';
+ echo '<div class="dssast-note-submit"><p>标题限 200 字，正文支持基本 HTML。附件请填写链接。每分钟可投一篇新笔记，审核结果可在下方“我的投稿”查看。</p>';
  if ( isset( $_GET['dssast_submitted'] ) && '1' === $_GET['dssast_submitted'] ) { echo '<p role="status">笔记已提交，等待审核。</p>'; }
  if ( $note ) { echo '<p>审核意见：' . esc_html( get_post_meta( $id, 'dssast_review_reason', true ) ) . '</p>'; }
  echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="dssast_submit_note"><input type="hidden" name="dssast_note_id" value="' . absint( $id ) . '"><input type="hidden" name="dssast_return" value="' . esc_url( get_permalink() ) . '">';
  wp_nonce_field( 'dssast_submit_note_' . $id, 'dssast_nonce' );
- echo '<p><label>标题 <input required maxlength="200" name="dssast_title" value="' . esc_attr( $note ? $note->post_title : '' ) . '"></label></p><p><label>正文 <textarea required rows="14" name="dssast_content">' . esc_textarea( $note ? $note->post_content : '' ) . '</textarea></label></p><button type="submit">提交审核</button></form><h3>我的投稿（最近 30 条）</h3><ul>';
+ echo '<p><label>标题 <input required maxlength="200" name="dssast_title" value="' . esc_attr( $note ? $note->post_title : '' ) . '"></label></p><p><label>正文 <textarea required rows="14" name="dssast_content">' . esc_textarea( $note ? $note->post_content : '' ) . '</textarea></label></p><button type="submit">提交审核</button></form><h2>我的投稿（最近 30 条）</h2>';
  $items = get_posts( array( 'post_type' => 'dssast_note', 'author' => get_current_user_id(), 'post_status' => array( 'pending', 'draft', 'publish' ), 'numberposts' => 30 ) );
+ if ( ! $items ) { echo '<p>暂无投稿。</p></div>'; return ob_get_clean(); }
+ echo '<ul>';
  foreach ( $items as $item ) {
   $labels = array( 'pending' => '待审核', 'draft' => '退回/草稿', 'publish' => '已发布' );
   echo '<li>' . esc_html( $item->post_title . ' — ' . $labels[$item->post_status] );
   if ( 'draft' === $item->post_status ) { echo ' <a href="' . esc_url( add_query_arg( 'dssast_edit_note', $item->ID, get_permalink() ) ) . '">修改再提交</a>'; }
+  if ( 'publish' === $item->post_status ) { echo ' <a href="' . esc_url( get_permalink( $item ) ) . '">阅读笔记</a>'; }
   echo '</li>';
  }
  echo '</ul></div>'; return ob_get_clean();
@@ -46,7 +62,8 @@ add_action( 'admin_post_dssast_submit_note', function () {
  foreach ( array( 'dssast_title', 'dssast_content' ) as $key ) { if ( ! isset( $_POST[$key] ) || ! is_string( $_POST[$key] ) ) { wp_die( '字段格式错误' ); } }
  $title = sanitize_text_field( wp_unslash( $_POST['dssast_title'] ) );
  $content = dssast_safe_import_html( wp_unslash( $_POST['dssast_content'] ) );
- if ( '' === trim( $title ) || '' === trim( wp_strip_all_tags( $content ) ) || strlen( $title ) > 800 || strlen( $content ) > 100000 ) { wp_die( '标题或正文为空或过长' ); }
+ if ( ! preg_match( '/\A.{1,200}\z/us', $title ) ) { wp_die( '标题须为 1 至 200 字' ); }
+ if ( '' === trim( wp_strip_all_tags( $content ) ) || strlen( $content ) > 100000 ) { wp_die( '正文为空或过长' ); }
  $lock = 'dssast_note_lock_' . get_current_user_id();
  if ( ! add_option( $lock, time(), '', false ) ) { wp_die( '请勿重复提交，请稍后重试' ); }
  try {

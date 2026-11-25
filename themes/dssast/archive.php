@@ -3,7 +3,7 @@
 <main>
   <section class="archive-list">
     <header class="archive-header">
-      <h1><?php single_term_title(); ?></h1>
+      <h1><?php is_post_type_archive( 'dssast_note' ) ? post_type_archive_title() : single_term_title(); ?></h1>
       <?php if (term_description()) : ?>
         <div class="archive-desc"><?php echo term_description(); ?></div>
       <?php endif; ?>

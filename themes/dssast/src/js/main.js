@@ -1,4 +1,5 @@
 import Alpine from 'alpinejs';
+import './notes.js';
 
 Alpine.data('heroOrbs', ({ count = 12, w = 800, h = 180 } = {}) => ({
   init() {

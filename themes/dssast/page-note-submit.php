@@ -23,7 +23,7 @@
 					<summary>怎样准备和提交稿件？</summary>
 					<p>可直接填写正文，也可附 Markdown 原稿或 PDF 的可访问链接。Markdown 如含插图，请用相对路径引用，并将原稿与图片放在同一文件夹分享。已有相同主题时，请说明你的补充或适用学期。</p>
 					<p>请确认有权公开分享正文和配图。投稿经审核后会按约定署名发布；可在下方“我的投稿”查看进度和退回意见。</p>
-					<dl class="submission-guide__email"><dt>投稿邮箱</dt><dd aria-label="暂未公布">—</dd></dl>
+					<dl class="submission-guide__email"><dt>投稿邮箱</dt><dd><a href="mailto:zhuyf24@mails.tsinghua.edu.cn">zhuyf24@mails.tsinghua.edu.cn</a></dd></dl>
 				</details>
 			</section>
 		<?php endif; ?>

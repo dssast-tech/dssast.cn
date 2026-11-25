@@ -15,7 +15,7 @@ jobs:
   publish:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 100
     concurrency:
       group: wordpress-course-note-files
       cancel-in-progress: false
@@ -39,7 +39,15 @@ jobs:
           install -m 600 /dev/null "$key_dir/key"
           printf '%s\n' "$DEPLOY_SSH_KEY" | tr -d '\r' > "$key_dir/key"
           printf '%s\n' "$DEPLOY_KNOWN_HOSTS" | tr -d '\r' > "$key_dir/known_hosts"
-          export RSYNC_RSH="ssh -i '$key_dir/key' -o UserKnownHostsFile='$key_dir/known_hosts' -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -o BatchMode=yes"
-          rsync -rtO --checksum --delay-updates --itemize-changes \
-            --rsync-path="test -d /var/www/html/wp-content/themes/dssast/data && rsync" \
-            -- "$RUNNER_TEMP/course-pdfs/" "$DEPLOY_USER@$DEPLOY_HOST:/var/www/html/wp-content/themes/dssast/data/author-pdfs/"
+          export RSYNC_RSH="ssh -i '$key_dir/key' -o UserKnownHostsFile='$key_dir/known_hosts' -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=20 -o ServerAliveInterval=30 -o ServerAliveCountMax=3"
+          export pdf_destination="$DEPLOY_USER@$DEPLOY_HOST:/var/www/html/wp-content/themes/dssast/data/author-pdfs/"
+          export remote_rsync="test -d /var/www/html/wp-content/themes/dssast/data && rsync"
+          rsync -rd --exclude='*' --rsync-path="$remote_rsync" -- "$RUNNER_TEMP/course-pdfs/" "$pdf_destination"
+          # Publish each complete file atomically. Reuse partial files from interrupted releases.
+          publish_pdf() {
+            rsync -rtO --checksum --partial-dir='.~tmp~' --timeout=180 --itemize-changes \
+              --rsync-path="$remote_rsync" -- "$1" "$pdf_destination"
+          }
+          export -f publish_pdf
+          find "$RUNNER_TEMP/course-pdfs" -maxdepth 1 -type f -name '*.pdf' -print0 |
+            xargs -0 -r -P 4 -n 1 bash -c 'publish_pdf "$1"' _

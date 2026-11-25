@@ -301,19 +301,5 @@
         "attachments": 1
       }
     ]
-  },
-  "related": [
-    {
-      "title": "2022 年暑培 · Git 讲义与录屏",
-      "url": "https://ssast-readme.github.io/tech/2022Summer/git/git/"
-    },
-    {
-      "title": "星火计划 · 参与心得",
-      "url": "https://ssast-readme.github.io/innovation/star/share/"
-    },
-    {
-      "title": "书信传情（2021）· 往届同学来信",
-      "url": "https://ssast-readme.github.io/letter/ReadMe%20X%20%E4%B9%A6%E4%BF%A1%E4%BC%A0%E6%83%852021%E7%AE%80%E4%BB%8B/"
-    }
-  ]
+  }
 }

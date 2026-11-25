@@ -10,7 +10,6 @@ get_header();
 			<?php
 			$directory = wp_json_file_decode( get_theme_file_path( 'data/readme-notes.json' ), array( 'associative' => true ) );
 			$courses   = $directory['courses'] ?? array();
-			$related   = $directory['related'] ?? array();
 			$local_courses = array();
 			$indexed_notes = get_posts( array(
 				'post_type' => 'dssast_note', 'post_status' => 'publish', 'has_password' => false,
@@ -35,7 +34,6 @@ get_header();
 			<nav class="notes-sections" aria-label="笔记导航">
 				<?php if ( $courses ) : ?><a href="#course-library">课程资料目录</a><?php endif; ?>
 				<a href="#local-notes">本站笔记</a>
-				<?php if ( $related ) : ?><a href="#related-reading">延伸阅读</a><?php endif; ?>
 				<?php if ( $has_submission_page ) : ?>
 					<a class="notes-sections__submit" href="<?php echo esc_url( get_permalink( $submission ) ); ?>">邮箱投稿</a>
 				<?php elseif ( has_shortcode( get_post()->post_content, 'dssast_note_submit' ) ) : ?>
@@ -111,14 +109,6 @@ get_header();
 				<?php endif; ?>
 			</section>
 
-			<?php if ( $related ) : ?>
-				<section class="notes-related" id="related-reading" aria-labelledby="related-heading">
-					<h2 id="related-heading">延伸阅读</h2>
-					<ul><?php foreach ( $related as $item ) : ?>
-						<li><a href="<?php echo esc_url( $item['url'] ); ?>"><?php echo esc_html( $item['title'] ); ?></a></li>
-					<?php endforeach; ?></ul>
-				</section>
-			<?php endif; ?>
 		<?php endif; ?>
 	<?php endwhile; ?>
 </main>

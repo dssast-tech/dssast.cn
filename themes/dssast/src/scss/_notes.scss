@@ -36,8 +36,6 @@
   max-width: 54rem;
   overflow-wrap: anywhere;
   h1 { margin-block: .6rem; }
-  .dssast-note-submit h2 { margin-block: 2rem .55rem; }
-  .dssast-note-submit ul { padding-inline-start: 1.5rem; }
 }
 
 .submission-guide {
@@ -52,7 +50,7 @@
   summary:focus-visible { outline: 2px solid $color-logo-b; outline-offset: 3px; }
   details p, dt { margin-top: .5rem; }
   dt { font-weight: 600; }
-  &__email { display: flex; align-items: baseline; gap: .75rem; }
+  &__email { margin-block: .65rem; font-weight: 600; }
 }
 
 .notes-library__intro {

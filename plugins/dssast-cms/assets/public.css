@@ -35,36 +35,6 @@
     max-width: 100%;
 }
 
-.dssast-note-submit form {
-    display: grid;
-    gap: .85rem;
-    margin-bottom: 1.5rem;
-}
-
-.dssast-note-submit form p {
-    margin: 0;
-}
-
-.dssast-note-submit input:not([type="hidden"]),
-.dssast-note-submit textarea {
-    background: transparent;
-    border: 1px solid currentColor;
-    border-radius: .5rem;
-    box-sizing: border-box;
-    color: inherit;
-    display: block;
-    font: inherit;
-    margin-top: .35rem;
-    padding: .55rem .7rem;
-    width: 100%;
-}
-
-.dssast-note-submit [role="status"] {
-    border-inline-start: 3px solid currentColor;
-    padding-inline-start: .8rem;
-}
-
-.dssast-note-submit button,
 .dssast-registration {
     background: #125a50;
     border: 1px solid transparent;
@@ -79,19 +49,16 @@
     text-decoration: none;
 }
 
-.dssast-note-submit button:hover,
 .dssast-registration:hover {
     background: #0b453d;
     color: #fff;
 }
 
-.dssast-note-submit :focus-visible,
 .dssast-registration:focus-visible {
     outline: 2px solid currentColor;
     outline-offset: 3px;
 }
 
-.dssast-note-submit button:focus-visible,
 .dssast-registration:focus-visible {
     outline-color: #31887a;
 }

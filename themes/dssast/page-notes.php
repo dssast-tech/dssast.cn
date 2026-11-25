@@ -37,9 +37,9 @@ get_header();
 				<a href="#local-notes">本站笔记</a>
 				<?php if ( $related ) : ?><a href="#related-reading">延伸阅读</a><?php endif; ?>
 				<?php if ( $has_submission_page ) : ?>
-					<a class="notes-sections__submit" href="<?php echo esc_url( get_permalink( $submission ) ); ?>">投稿与查看进度</a>
+					<a class="notes-sections__submit" href="<?php echo esc_url( get_permalink( $submission ) ); ?>">邮箱投稿</a>
 				<?php elseif ( has_shortcode( get_post()->post_content, 'dssast_note_submit' ) ) : ?>
-					<a href="#local-notes">投稿与查看进度</a>
+					<a href="#local-notes">邮箱投稿</a>
 				<?php endif; ?>
 			</nav>
 

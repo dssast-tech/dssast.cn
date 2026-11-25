@@ -1,0 +1,45 @@
+name: Publish contributed course PDFs
+on:
+  push:
+    branches: [main]
+    paths:
+      - content/course-notes/litianxiao.json
+      - .github/scripts/stage-note-pdfs.py
+      - .github/workflows/note-files.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    concurrency:
+      group: wordpress-course-note-files
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Fetch and verify the author's PDFs
+        run: python3 .github/scripts/stage-note-pdfs.py "$RUNNER_TEMP/course-pdfs"
+      - name: Publish verified files to the website
+        shell: bash
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST || 'dssast.cn' }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          key_dir=$(mktemp -d "$RUNNER_TEMP/note-pdf-ssh.XXXXXX")
+          trap 'rm -rf -- "$key_dir"' EXIT
+          install -m 600 /dev/null "$key_dir/key"
+          printf '%s\n' "$DEPLOY_SSH_KEY" | tr -d '\r' > "$key_dir/key"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" | tr -d '\r' > "$key_dir/known_hosts"
+          export RSYNC_RSH="ssh -i '$key_dir/key' -o UserKnownHostsFile='$key_dir/known_hosts' -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -o BatchMode=yes"
+          rsync -rtO --checksum --delay-updates --itemize-changes \
+            --rsync-path="test -d /var/www/html/wp-content/themes/dssast/data && rsync" \
+            -- "$RUNNER_TEMP/course-pdfs/" "$DEPLOY_USER@$DEPLOY_HOST:/var/www/html/wp-content/themes/dssast/data/author-pdfs/"

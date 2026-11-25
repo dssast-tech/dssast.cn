@@ -36,9 +36,23 @@
   max-width: 54rem;
   overflow-wrap: anywhere;
   h1 { margin-block: .6rem; }
-  &__intro { margin-bottom: 1.25rem; color: $color-text-muted; }
   .dssast-note-submit h2 { margin-block: 2rem .55rem; }
   .dssast-note-submit ul { padding-inline-start: 1.5rem; }
+}
+
+.submission-guide {
+  margin: 1rem 0 2rem;
+  padding: 1.25rem clamp(1rem, 3vw, 1.65rem);
+  background: $color-surface;
+  border-inline-start: .25rem solid $color-logo-b;
+  border-radius: $radius-md;
+  h2 { margin-bottom: .5rem; }
+  details { margin-top: .75rem; border-top: 1px solid $color-border; padding-top: .6rem; }
+  summary { cursor: pointer; color: $color-logo-a; font-weight: 600; }
+  summary:focus-visible { outline: 2px solid $color-logo-b; outline-offset: 3px; }
+  details p, dt { margin-top: .5rem; }
+  dt { font-weight: 600; }
+  &__email { display: flex; align-items: baseline; gap: .75rem; }
 }
 
 .notes-library__intro {
@@ -53,7 +67,7 @@
 
 .notes-filters {
   display: grid;
-  grid-template-columns: 2fr 1.25fr 1fr;
+  grid-template-columns: 1.8fr 1.2fr 1fr 1fr;
   gap: .85rem;
   margin-top: 1.5rem;
   label { font-size: .875rem; font-weight: 600; color: $color-text-muted; }
@@ -140,6 +154,7 @@
   h1 { font-size: clamp(1.8rem, 4vw, 2.75rem); line-height: 1.3; }
   a { color: $color-logo-b; text-decoration: underline; text-underline-offset: .2em; }
   &__back { margin-bottom: .85rem; }
+  &__credit { margin-top: .55rem; color: $color-text-muted; }
   &__body {
     margin-top: 1.5rem;
     line-height: 1.85;
@@ -148,6 +163,7 @@
     [id] { scroll-margin-top: $header-height + 1rem; }
     img, video { max-width: 100%; height: auto; }
     iframe { max-width: 100%; }
+    .note-pdf { display: block; width: 100%; height: 78vh; min-height: 24rem; border: 1px solid $color-border; }
     pre, table, .wp-block-table, .katex-display, mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
     table { display: block; }
     pre { padding: 1rem; border-radius: $radius-md; background: $color-surface; }

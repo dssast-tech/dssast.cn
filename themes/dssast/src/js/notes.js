@@ -6,6 +6,7 @@ if (library) {
   const query = filters.querySelector('[data-query]');
   const course = filters.querySelector('[data-course]');
   const format = filters.querySelector('[data-format]');
+  const source = filters.querySelector('[data-source]');
   const count = library.querySelector('[data-count]');
   const reset = library.querySelector('[data-reset]');
   const empty = library.querySelector('[data-empty]');
@@ -29,7 +30,8 @@ if (library) {
       let matches = 0;
       for (const { row, text, formats } of items) {
         const visible = selected && terms.every(term => text.includes(term))
-          && (!format.value || formats.includes(format.value));
+          && (!format.value || formats.includes(format.value))
+          && (!source.value || row.dataset.sourceKind === source.value);
         row.hidden = !visible;
         if (visible) matches++;
       }
@@ -39,17 +41,19 @@ if (library) {
     }
 
     count.textContent = totalGroups + ' 个课程或专题 · ' + totalItems + ' 条资料';
-    reset.hidden = !query.value && !course.value && !format.value;
+    reset.hidden = !query.value && !course.value && !format.value && !source.value;
     empty.hidden = totalItems !== 0;
   }
 
   query.addEventListener('input', update);
   course.addEventListener('change', update);
   format.addEventListener('change', update);
+  source.addEventListener('change', update);
   reset.addEventListener('click', () => {
     query.value = '';
     course.value = '';
     format.value = '';
+    source.value = '';
     update();
     query.focus();
   });

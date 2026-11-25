@@ -7,6 +7,18 @@ function dssast_register_notes() {
  register_post_type( 'dssast_note', array( 'labels' => array( 'name' => '学习笔记', 'singular_name' => '笔记', 'add_new_item' => '添加笔记', 'edit_item' => '编辑笔记' ), 'menu_icon' => 'dashicons-book-alt', 'menu_position' => 28, 'public' => true, 'show_in_rest' => true, 'has_archive' => 'dssast-notes', 'rewrite' => array( 'slug' => 'notes' ), 'supports' => array( 'title', 'editor', 'author', 'revisions' ), 'capabilities' => $caps, 'map_meta_cap' => true ) );
 }
 add_action( 'init', 'dssast_register_notes' );
+add_action( 'init', function () {
+    add_post_type_support( 'dssast_note', 'custom-fields' );
+    add_post_type_support( 'dssast_note', 'excerpt' );
+    foreach ( array( 'course', 'credit', 'term', 'format', 'credit_url' ) as $field ) {
+        register_post_meta( 'dssast_note', 'dssast_note_' . $field, array(
+            'type' => 'string', 'single' => true, 'show_in_rest' => true,
+            'sanitize_callback' => 'credit_url' === $field
+                ? static function ( $value ) { return esc_url_raw( $value, array( 'https', 'http' ) ); }
+                : 'sanitize_text_field',
+        ) );
+    }
+} );
 add_action( 'pre_get_posts', function ( $query ) {
     if ( ! is_admin() && $query->is_main_query() && $query->is_post_type_archive( 'dssast_note' ) ) {
         $query->set( 'post_status', 'publish' );

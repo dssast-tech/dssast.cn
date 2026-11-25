@@ -37,5 +37,11 @@ if __name__ == "__main__":
         raise ValueError("Invalid GitHub account")
     destination = Path(sys.argv[1])
     destination.mkdir(parents=True, exist_ok=True)
+    withdrawn = manifest.get("withdrawn_files", [])
+    active = {f"{note['slug']}-{note['sha256'][:12]}.pdf" for note in manifest["notes"]}
+    for name in withdrawn:
+        if not re.fullmatch(r"[a-z0-9][a-z0-9-]*-[0-9a-f]{12}\.pdf", name) or name in active:
+            raise ValueError(f"Invalid withdrawn PDF name: {name}")
+    (destination / "withdrawn.txt").write_text("".join(name + "\n" for name in withdrawn), encoding="utf-8")
     with ThreadPoolExecutor(max_workers=4) as pool:
         list(pool.map(stage, manifest["notes"]))

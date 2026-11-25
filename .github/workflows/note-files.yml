@@ -43,6 +43,15 @@ jobs:
           export pdf_destination="$DEPLOY_USER@$DEPLOY_HOST:/var/www/html/wp-content/themes/dssast/data/author-pdfs/"
           export remote_rsync="test -d /var/www/html/wp-content/themes/dssast/data && rsync"
           rsync -rd --exclude='*' --rsync-path="$remote_rsync" -- "$RUNNER_TEMP/course-pdfs/" "$pdf_destination"
+          # Withdraw only the explicitly named public copies, including on a retried release.
+          withdrawn=()
+          while IFS= read -r name; do
+            withdrawn+=("$RUNNER_TEMP/course-pdfs/$name")
+          done < "$RUNNER_TEMP/course-pdfs/withdrawn.txt"
+          if (( ${#withdrawn[@]} )); then
+            rsync -d --delete-missing-args --itemize-changes --rsync-path="$remote_rsync" \
+              -- "${withdrawn[@]}" "$pdf_destination"
+          fi
           # Publish each complete file atomically. Reuse partial files from interrupted releases.
           publish_pdf() {
             rsync -rtO --checksum --partial-dir='.~tmp~' --timeout=180 --itemize-changes \

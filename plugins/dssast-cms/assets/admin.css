@@ -675,3 +675,43 @@
         grid-column: 1 / -1;
     }
 }
+
+/* --- competition cover field --- */
+.dssast-cover {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 8px 0 4px;
+}
+
+.dssast-cover__preview {
+    background: #eef1f5;
+    border: 1px solid #cfddf0;
+    border-radius: 6px;
+    display: block;
+    height: 60px;
+    object-fit: cover;
+    width: 160px;
+}
+
+.dssast-cover__empty {
+    align-items: center;
+    background: linear-gradient(120deg, #eef4ff, #f4f0ff);
+    border: 1px dashed #cfddf0;
+    border-radius: 6px;
+    color: var(--dssast-muted);
+    display: inline-flex;
+    font-size: 12px;
+    height: 60px;
+    justify-content: center;
+    width: 160px;
+}
+
+.dssast-cover__remove {
+    color: #8b3731;
+}
+
+.dssast-cover [hidden] {
+    display: none !important;
+}

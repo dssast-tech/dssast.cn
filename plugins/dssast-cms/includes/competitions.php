@@ -156,7 +156,22 @@ function dssast_details_box( $post ) {
             </div>
         <?php endforeach; ?>
     </div>
-    <p class="description">赛事时间会显示在详情页顶部；状态留空时按「报名截止 / 开赛 / 结束」自动推导。封面请在右侧「特色图片」上传，建议 1600×600（16:6），会作为详情页头图。</p>
+    <p class="description">赛事时间会显示在详情页顶部；状态留空时按「报名截止 / 开赛 / 结束」自动推导。</p>
+
+    <h3 class="dssast-links-title">封面图片</h3>
+    <p class="description">建议 1600×600（16:6），卡片和详情页头图都会用它；不设置则显示默认渐变封面。</p>
+    <?php
+    $cover_id = (int) get_post_thumbnail_id( $post->ID );
+    $cover_src = $cover_id ? wp_get_attachment_image_url( $cover_id, 'medium' ) : '';
+    ?>
+    <div class="dssast-cover" data-dssast-cover>
+        <input type="hidden" name="dssast_cover" value="<?php echo esc_attr( (string) $cover_id ); ?>">
+        <input type="hidden" name="dssast_cover_present" value="1">
+        <img class="dssast-cover__preview" data-cover-preview<?php echo $cover_src ? ' src="' . esc_url( $cover_src ) . '"' : ''; ?> alt=""<?php echo $cover_src ? '' : ' hidden'; ?>>
+        <span class="dssast-cover__empty" data-cover-empty<?php echo $cover_src ? ' hidden' : ''; ?>>默认渐变封面</span>
+        <button type="button" class="button" data-cover-select>选择封面</button>
+        <button type="button" class="button-link dssast-cover__remove" data-cover-remove<?php echo $cover_src ? '' : ' hidden'; ?>>移除</button>
+    </div>
 
     <h3 class="dssast-links-title">相关链接</h3>
     <p class="description">直接粘贴链接即可（如公众号推送地址），标题可以留空；这些链接只显示在详情页，卡片列表不展示。</p>
@@ -266,6 +281,21 @@ add_action( 'save_post_dssast_competition', function ( $id ) {
          delete_post_meta( $id, 'dssast_links' );
      }
  }
+
+ // Cover image is stored as the post thumbnail so every consumer sees it.
+ if ( ! $quick_edit && isset( $_POST['dssast_cover_present'] ) ) {
+     $cover = isset( $_POST['dssast_cover'] ) ? absint( $_POST['dssast_cover'] ) : 0;
+     if ( $cover && 'attachment' === get_post_type( $cover ) && wp_attachment_is_image( $cover ) ) {
+         set_post_thumbnail( $id, $cover );
+     } elseif ( 0 === $cover ) {
+         delete_post_thumbnail( $id );
+     }
+ }
+} );
+
+// Our own cover field replaces the core featured image box for competitions.
+add_action( 'do_meta_boxes', function () {
+    remove_meta_box( 'postimagediv', 'dssast_competition', 'side' );
 } );
 
 add_action( 'admin_notices', function () {

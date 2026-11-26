@@ -81,10 +81,18 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
         );
     }
     if ( in_array( $hook, array( 'post.php', 'post-new.php' ), true ) && $screen && 'dssast_competition' === $screen->post_type ) {
+        wp_enqueue_media();
         wp_enqueue_script(
             'dssast-competition-links',
             plugins_url( 'assets/competition-links.js', DSSAST_CMS_FILE ),
             array(),
+            DSSAST_CMS_VERSION,
+            true
+        );
+        wp_enqueue_script(
+            'dssast-competition-cover',
+            plugins_url( 'assets/competition-cover.js', DSSAST_CMS_FILE ),
+            array( 'media-editor' ),
             DSSAST_CMS_VERSION,
             true
         );

@@ -44,28 +44,5 @@ add_action( 'wp_enqueue_scripts', function () {
  wp_enqueue_style( 'dssast-public', plugins_url( 'assets/public.css', DSSAST_CMS_FILE ), array(), DSSAST_CMS_VERSION );
 } );
 
-add_filter( 'the_content', function ( $content ) {
- if ( ! is_singular( 'dssast_competition' ) || ! in_the_loop() || ! is_main_query() || post_password_required() ) { return $content; }
-
- $id = get_the_ID();
- $state = dssast_competition_state( $id );
- $start = (string) get_post_meta( $id, 'dssast_date', true );
- $end = (string) get_post_meta( $id, 'dssast_end_date', true );
- if ( '' === $end || $end < $start ) { $end = $start; }
-
- $details = '<p>' . esc_html( '赛事状态：' . $state['label'] ) . '</p>';
- if ( '' !== $start ) {
-  $details .= '<p>' . esc_html( '赛事日期：' . ( $start === $end ? $start : $start . ' – ' . $end ) ) . '</p>';
- }
-
- $links = dssast_competition_links( $id );
- if ( $links ) {
-  $details .= '<h2>推送</h2><ul class="dssast-details__links">';
-  foreach ( $links as $link ) {
-   $details .= '<li><a rel="nofollow noopener" target="_blank" href="' . esc_url( $link['url'], array( 'http', 'https' ) ) . '">' . esc_html( $link['title'] ) . '</a></li>';
-  }
-  $details .= '</ul>';
- }
-
- return '' === $details ? $content : $content . '<section class="dssast-details"><h2>赛事信息</h2>' . $details . '</section>';
-} );
+// The competition detail template (single-dssast_competition.php) renders the
+// state, key dates and links itself, so the content is printed unchanged.

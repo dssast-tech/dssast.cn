@@ -7,13 +7,21 @@ defined( 'ABSPATH' ) || exit;
  * edited here.
  */
 function dssast_fields() {
- return array( 'status' => '赛事状态', 'date' => '赛事日期', 'end_date' => '赛事结束日期' );
+ return array( 'deadline' => '报名截止', 'date' => '赛事开始', 'end_date' => '赛事结束', 'status' => '赛事状态' );
 }
 
 /** Manual overrides. Everything else is derived from the dates. */
 function dssast_statuses() { return array( 'completed' => '已结束', 'cancelled' => '已取消' ); }
 
-function dssast_state_labels() { return array( 'upcoming' => '即将开始', 'ongoing' => '进行中', 'finished' => '已结束', 'cancelled' => '已取消' ); }
+function dssast_state_labels() {
+ return array(
+  'open'     => '报名中',
+  'closed'   => '报名结束',
+  'ongoing'  => '进行中',
+  'finished' => '已结束',
+  'cancelled' => '已取消',
+ );
+}
 
 function dssast_register_competitions() {
  register_post_type( 'dssast_competition', array(
@@ -62,6 +70,9 @@ function dssast_competition_links( $id ) {
 /**
  * Current state of a competition. A manual value in dssast_status wins,
  * otherwise the dates decide. Dates are site-local Y-m-d strings.
+ *
+ * 比赛结束后 → 已结束；比赛进行中 → 进行中；报名截止前 → 报名中；
+ * 报名截止后到开赛前 → 报名结束。
  */
 function dssast_competition_state( $id ) {
     $labels = dssast_state_labels();
@@ -70,24 +81,38 @@ function dssast_competition_state( $id ) {
         return array( 'code' => 'cancelled' === $manual ? 'cancelled' : 'finished', 'label' => dssast_statuses()[ $manual ], 'manual' => true );
     }
 
-    $start = get_post_meta( $id, 'dssast_date', true );
-    $end = get_post_meta( $id, 'dssast_end_date', true );
-    $start = is_string( $start ) ? trim( $start ) : '';
-    $end = is_string( $end ) ? trim( $end ) : '';
-    if ( '' === $end || $end < $start ) { $end = $start; }
+    $read = function ( $key ) use ( $id ) {
+        $value = get_post_meta( $id, $key, true );
+        return is_string( $value ) ? trim( $value ) : '';
+    };
+    $deadline = $read( 'dssast_deadline' );
+    $start = $read( 'dssast_date' );
+    $end = $read( 'dssast_end_date' );
+    if ( '' !== $start && ( '' === $end || $end < $start ) ) { $end = $start; }
 
     $today = current_time( 'Y-m-d' );
-    if ( '' === $start ) { $code = 'upcoming'; }
-    elseif ( $today < $start ) { $code = 'upcoming'; }
-    elseif ( $today <= $end ) { $code = 'ongoing'; }
-    else { $code = 'finished'; }
+
+    if ( '' !== $end && $today > $end ) {
+        $code = 'finished';
+    } elseif ( '' !== $start && $today >= $start ) {
+        $code = 'ongoing';
+    } elseif ( '' !== $deadline && $today <= $deadline ) {
+        $code = 'open';
+    } elseif ( '' !== $deadline ) {
+        $code = 'closed';
+    } elseif ( '' !== $start ) {
+        // No deadline on record: the event simply has not started yet.
+        $code = 'closed';
+    } else {
+        $code = 'open';
+    }
 
     return array( 'code' => $code, 'label' => $labels[ $code ], 'manual' => false );
 }
 
 function dssast_competition_field_control( $field, $value, $id = '' ) {
     $name = 'dssast_' . $field;
-    $types = array( 'date' => 'date', 'end_date' => 'date' );
+    $types = array( 'deadline' => 'date', 'date' => 'date', 'end_date' => 'date' );
     $id_attribute = '' !== $id ? ' id="' . esc_attr( $id ) . '"' : '';
     if ( 'status' === $field ) : ?>
         <select name="<?php echo esc_attr( $name ); ?>"<?php echo $id_attribute; ?>>
@@ -97,7 +122,7 @@ function dssast_competition_field_control( $field, $value, $id = '' ) {
             <?php endforeach; ?>
         </select>
     <?php else : ?>
-        <input type="<?php echo esc_attr( $types[$field] ); ?>" name="<?php echo esc_attr( $name ); ?>"<?php echo $id_attribute; ?> value="<?php echo esc_attr( $value ); ?>">
+        <input type="<?php echo esc_attr( $types[$field] ); ?>" name="<?php echo esc_attr( $name ); ?>"<?php echo $id_attribute; ?> value="<?php echo esc_attr( $value ); ?>"<?php echo 'deadline' === $field ? ' required aria-required="true"' : ''; ?>>
     <?php endif;
 }
 
@@ -119,7 +144,8 @@ function dssast_details_box( $post ) {
     $values = dssast_competition_values( $post->ID );
     $links = dssast_competition_links( $post->ID );
     ?>
-    <p class="description">时间采用站点时区 <?php echo esc_html( wp_timezone_string() ); ?>。状态留空时按日期自动推导。</p>
+    <p class="description">时间采用站点时区 <?php echo esc_html( wp_timezone_string() ); ?>。<strong>报名截止为必填</strong>，赛事开始/结束可只填开始。</p>
+    <input type="hidden" name="dssast_full_edit" value="1">
     <div class="dssast-fields">
         <?php foreach ( dssast_fields() as $field => $label ) :
             $key = 'dssast_' . $field;
@@ -130,10 +156,10 @@ function dssast_details_box( $post ) {
             </div>
         <?php endforeach; ?>
     </div>
-    <p class="description">结束日期可留空，默认与赛事日期同一天。卡片封面请在右侧「特色图片」上传，建议 1600×600（16:6）。</p>
+    <p class="description">赛事时间会显示在详情页顶部；状态留空时按「报名截止 / 开赛 / 结束」自动推导。封面请在右侧「特色图片」上传，建议 1600×600（16:6），会作为详情页头图。</p>
 
-    <h3 class="dssast-links-title">推送链接</h3>
-    <p class="description">最多 10 条，卡片末尾按这里的顺序展示；第一条会作为卡片的跳转目标。</p>
+    <h3 class="dssast-links-title">相关链接</h3>
+    <p class="description">最多 10 条。卡片和详情页都会按这里的顺序列出；点标题直接打开链接。</p>
     <input type="hidden" name="dssast_links_present" value="1">
     <div class="dssast-links" data-dssast-links>
         <?php
@@ -165,6 +191,8 @@ function dssast_validate_fields( $input ) {
   $clean[$key] = $value;
  }
  if ( '' !== $clean['dssast_date'] && '' !== $clean['dssast_end_date'] && $clean['dssast_end_date'] < $clean['dssast_date'] ) { return false; }
+ // The deadline is mandatory in the editor; quick edit never posts it as empty.
+ if ( ! empty( $input['dssast_full_edit'] ) && '' === $clean['dssast_deadline'] ) { return false; }
  return $clean;
 }
 
@@ -242,13 +270,26 @@ add_action( 'save_post_dssast_competition', function ( $id ) {
 
 add_action( 'admin_notices', function () {
  $key = 'dssast_error_' . get_current_user_id();
- if ( get_transient( $key ) ) { delete_transient( $key ); echo '<div class="notice notice-error"><p>赛事业务字段未保存：请检查日期先后顺序，以及推送链接是否为完整的 HTTP(S) 地址。</p></div>'; }
+ if ( get_transient( $key ) ) { delete_transient( $key ); echo '<div class="notice notice-error"><p>赛事业务字段未保存：请确认「报名截止」已填写、日期先后顺序正确，相关链接都是完整的 HTTP(S) 地址。</p></div>'; }
 } );
 
 /** Starter content so a new competition opens with the usual section headings. */
 add_filter( 'default_content', function ( $content, $post ) {
     if ( ! $post instanceof WP_Post || 'dssast_competition' !== $post->post_type ) { return $content; }
-    return "<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">赛事简介</h2>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>一两句话说清这是什么比赛、谁办的。</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">参赛对象</h2>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>面向哪些年级、是否组队、队伍人数。</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">赛程安排</h2>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>报名、初赛、决赛各阶段的时间节点。</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">奖项设置</h2>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>奖项与奖品说明。</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">联系方式</h2>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>负责人的邮箱或微信群。</p>\n<!-- /wp:paragraph -->\n";
+    $sections = array(
+        array( '赛事简介', '一两句话说清这是什么比赛、由谁主办、面向谁。' ),
+        array( '参赛条件', '参赛对象、组队要求（每队人数、指导老师）、报名方式与限制。' ),
+        array( '赛道设置', '如果有多个赛道，分条写明每个赛道的题目方向与作品形式。' ),
+        array( '赛程安排', '报名截止、初赛、决赛、颁奖各阶段的时间节点与地点。' ),
+        array( '奖项设置', '奖项等级、名额与奖品。' ),
+        array( '大赛组织', '指导单位 / 主办单位 / 承办单位 / 协办单位。' ),
+    );
+    $html = '';
+    foreach ( $sections as $section ) {
+        $html .= "<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">" . $section[0] . "</h2>\n<!-- /wp:heading -->\n\n";
+        $html .= "<!-- wp:paragraph -->\n<p>" . $section[1] . "</p>\n<!-- /wp:paragraph -->\n\n";
+    }
+    return $html;
 }, 10, 2 );
 
 /**
@@ -266,7 +307,7 @@ function dssast_get_competitions( $args = array() ) {
         'order' => 'DESC',
     ) );
 
-    $rank = array( 'ongoing' => 0, 'upcoming' => 1, 'finished' => 2, 'cancelled' => 3 );
+    $rank = array( 'open' => 0, 'ongoing' => 1, 'closed' => 2, 'finished' => 3, 'cancelled' => 4 );
     usort( $posts, function ( $a, $b ) use ( $rank ) {
         $state_a = dssast_competition_state( $a->ID );
         $state_b = dssast_competition_state( $b->ID );

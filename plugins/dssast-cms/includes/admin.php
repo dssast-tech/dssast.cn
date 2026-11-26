@@ -390,8 +390,9 @@ add_filter( 'manage_dssast_competition_posts_columns', function ( $columns ) {
         }
     }
     $updated['dssast_status'] = '赛事状态';
-    $updated['dssast_date'] = '赛事日期';
-    $updated['dssast_links'] = '推送';
+    $updated['dssast_deadline'] = '报名截止';
+    $updated['dssast_date'] = '赛事时间';
+    $updated['dssast_links'] = '链接';
     if ( null !== $date ) {
         $updated['date'] = $date;
     }
@@ -407,9 +408,17 @@ add_action( 'manage_dssast_competition_posts_custom_column', function ( $column,
     if ( 'dssast_status' === $column ) {
         $state = dssast_competition_state( $id );
         dssast_state_badge( $state['code'], $state['label'] );
+    } elseif ( 'dssast_deadline' === $column ) {
+        $deadline = get_post_meta( $id, 'dssast_deadline', true );
+        echo esc_html( is_string( $deadline ) && '' !== $deadline ? $deadline : '—' );
     } elseif ( 'dssast_date' === $column ) {
-        $date = get_post_meta( $id, 'dssast_date', true );
-        echo esc_html( is_string( $date ) && '' !== $date ? $date : '—' );
+        $start = (string) get_post_meta( $id, 'dssast_date', true );
+        $end = (string) get_post_meta( $id, 'dssast_end_date', true );
+        if ( '' === $start ) {
+            echo '—';
+        } else {
+            echo esc_html( $start === $end || '' === $end ? $start : $start . ' – ' . $end );
+        }
     } elseif ( 'dssast_links' === $column ) {
         $links = dssast_competition_links( $id );
         echo esc_html( $links ? (string) count( $links ) : '—' );

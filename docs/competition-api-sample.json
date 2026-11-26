@@ -1,0 +1,183 @@
+{
+  "site": "https://dssast.cn",
+  "generated_at": "2026-11-26T20:00:00+08:00",
+  "total": 3,
+  "page": 1,
+  "per_page": 12,
+  "items": [
+    {
+      "id": 128,
+      "slug": "2026-algorithm-challenge",
+      "title": "2026 笃实书院算法挑战赛",
+      "url": "https://dssast.cn/competitions/2026-algorithm-challenge/",
+      "category": { "slug": "algorithm", "name": "算法" },
+      "state": { "code": "open", "label": "报名中", "manual": "" },
+      "excerpt": "面向全院本科生的个人算法竞赛，两轮线上赛，题目覆盖数据结构、图论与动态规划。",
+      "cover": {
+        "url": "https://dssast.cn/wp-content/uploads/2026/11/algorithm-2026.webp",
+        "width": 1600,
+        "height": 900,
+        "alt": "2026 算法挑战赛主视觉"
+      },
+      "date": "2026-12-20",
+      "venue": "线上（牛客平台）",
+      "organizer": "笃实书院学生科协 赛事部",
+      "audience": "全院本科生",
+      "featured": true,
+      "registration": {
+        "start": "2026-12-01T09:00:00+08:00",
+        "end": "2026-12-15T23:59:00+08:00",
+        "url": "https://dssast.cn/signup/algorithm-2026",
+        "mode": "external"
+      },
+      "stages": [
+        {
+          "key": "reg",
+          "label": "报名",
+          "start": "2026-12-01T09:00:00+08:00",
+          "end": "2026-12-15T23:59:00+08:00",
+          "note": "报名后 24 小时内收到确认邮件",
+          "state": "current"
+        },
+        {
+          "key": "round1",
+          "label": "初赛",
+          "start": "2026-12-20T19:00:00+08:00",
+          "end": "2026-12-20T21:00:00+08:00",
+          "note": "线上，牛客平台，2 小时 4 题",
+          "state": "upcoming"
+        },
+        {
+          "key": "final",
+          "label": "决赛",
+          "start": "2026-12-27T14:00:00+08:00",
+          "end": "2026-12-27T17:00:00+08:00",
+          "note": "线下，书院报告厅",
+          "state": "upcoming"
+        }
+      ],
+      "links": [
+        {
+          "type": "push",
+          "title": "赛事通知｜2026 算法挑战赛报名开启",
+          "url": "https://mp.weixin.qq.com/s/example-reg-open",
+          "date": "2026-12-02",
+          "stage": "reg"
+        },
+        {
+          "type": "push",
+          "title": "初赛须知：环境、语言与提交方式",
+          "url": "https://mp.weixin.qq.com/s/example-round1",
+          "date": "2026-12-18",
+          "stage": "round1"
+        },
+        {
+          "type": "material",
+          "title": "赛题大纲与样例题",
+          "url": "https://dssast.cn/wp-content/uploads/2026/12/algorithm-syllabus.pdf",
+          "date": "2026-12-10",
+          "stage": "round1"
+        },
+        {
+          "type": "other",
+          "title": "竞赛规则（含判题与申诉说明）",
+          "url": "https://dssast.cn/rules/algorithm-2026",
+          "date": "2026-12-01",
+          "stage": ""
+        }
+      ],
+      "updated_at": "2026-11-26T18:30:00+08:00"
+    },
+    {
+      "id": 131,
+      "slug": "2027-hardware-design",
+      "title": "2027 智能硬件设计赛",
+      "url": "https://dssast.cn/competitions/2027-hardware-design/",
+      "category": { "slug": "hardware", "name": "硬件" },
+      "state": { "code": "planned", "label": "未开始", "manual": "" },
+      "excerpt": "以小组为单位完成一个可演示的嵌入式作品，提供开发板与算力支持。",
+      "cover": {
+        "url": "https://dssast.cn/wp-content/uploads/2026/11/hardware-2027.webp",
+        "width": 1600,
+        "height": 900,
+        "alt": "智能硬件设计赛主视觉"
+      },
+      "date": "2027-03-15",
+      "venue": "待定",
+      "organizer": "笃实书院学生科协 赛事部",
+      "audience": "全院本科生，3 人一组",
+      "featured": false,
+      "registration": {
+        "start": "2027-02-20T09:00:00+08:00",
+        "end": "2027-03-01T23:59:00+08:00",
+        "url": "",
+        "mode": "form"
+      },
+      "stages": [
+        {
+          "key": "reg",
+          "label": "报名",
+          "start": "2027-02-20T09:00:00+08:00",
+          "end": "2027-03-01T23:59:00+08:00",
+          "note": "站内表单报名，需填写选题方向",
+          "state": "upcoming"
+        },
+        {
+          "key": "review",
+          "label": "方案评审",
+          "start": "2027-03-05T09:00:00+08:00",
+          "end": "2027-03-08T18:00:00+08:00",
+          "note": "",
+          "state": "upcoming"
+        },
+        {
+          "key": "demo",
+          "label": "现场答辩",
+          "start": "2027-03-15T14:00:00+08:00",
+          "end": "2027-03-15T17:00:00+08:00",
+          "note": "",
+          "state": "upcoming"
+        }
+      ],
+      "links": [],
+      "updated_at": "2026-11-20T10:00:00+08:00"
+    },
+    {
+      "id": 96,
+      "slug": "2026-hardware-design",
+      "title": "2026 智能硬件设计赛",
+      "url": "https://dssast.cn/competitions/2026-hardware-design/",
+      "category": { "slug": "hardware", "name": "硬件" },
+      "state": { "code": "completed", "label": "已结束", "manual": "" },
+      "excerpt": "首届智能硬件设计赛，共 24 支队伍参赛。",
+      "cover": {
+        "url": "https://dssast.cn/wp-content/uploads/2026/05/hardware-2026.webp",
+        "width": 1600,
+        "height": 900,
+        "alt": "2026 智能硬件设计赛主视觉"
+      },
+      "date": "2026-05-10",
+      "venue": "书院创新实验室",
+      "organizer": "笃实书院学生科协 赛事部",
+      "audience": "全院本科生",
+      "featured": false,
+      "registration": {
+        "start": "2026-04-01T09:00:00+08:00",
+        "end": "2026-04-20T23:59:00+08:00",
+        "url": "https://dssast.cn/signup/hardware-2026",
+        "mode": "external"
+      },
+      "stages": [],
+      "links": [
+        {
+          "type": "result",
+          "title": "获奖名单公示",
+          "url": "https://mp.weixin.qq.com/s/example-hardware-result",
+          "date": "2026-05-18",
+          "stage": ""
+        }
+      ],
+      "updated_at": "2026-05-18T09:00:00+08:00"
+    }
+  ]
+}

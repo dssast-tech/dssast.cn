@@ -80,6 +80,15 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
             true
         );
     }
+    if ( in_array( $hook, array( 'post.php', 'post-new.php' ), true ) && $screen && 'dssast_competition' === $screen->post_type ) {
+        wp_enqueue_script(
+            'dssast-competition-links',
+            plugins_url( 'assets/competition-links.js', DSSAST_CMS_FILE ),
+            array(),
+            DSSAST_CMS_VERSION,
+            true
+        );
+    }
 } );
 
 function dssast_management_views() {
@@ -373,26 +382,37 @@ function dssast_state_badge( $state, $label ) {
 add_filter( 'manage_dssast_competition_posts_columns', function ( $columns ) {
     $date = $columns['date'] ?? null;
     unset( $columns['date'] );
-    $columns['dssast_status'] = '赛事状态';
-    $columns['dssast_date'] = '赛事日期';
-    if ( null !== $date ) {
-        $columns['date'] = $date;
+    $updated = array();
+    foreach ( $columns as $key => $label ) {
+        $updated[ $key ] = $label;
+        if ( 'title' === $key ) {
+            $updated['dssast_cover'] = '封面';
+        }
     }
-    return $columns;
+    $updated['dssast_status'] = '赛事状态';
+    $updated['dssast_date'] = '赛事日期';
+    $updated['dssast_links'] = '推送';
+    if ( null !== $date ) {
+        $updated['date'] = $date;
+    }
+    return $updated;
 } );
 
 add_action( 'manage_dssast_competition_posts_custom_column', function ( $column, $id ) {
+    if ( 'dssast_cover' === $column ) {
+        echo get_the_post_thumbnail( $id, array( 60, 60 ), array( 'style' => 'width:60px;height:60px;object-fit:cover;border-radius:6px;display:block' ) );
+        return;
+    }
+
     if ( 'dssast_status' === $column ) {
-        $state = get_post_meta( $id, 'dssast_status', true );
-        $labels = dssast_statuses();
-        if ( is_string( $state ) && isset( $labels[ $state ] ) ) {
-            dssast_state_badge( $state, $labels[ $state ] );
-        } else {
-            echo '未设置';
-        }
+        $state = dssast_competition_state( $id );
+        dssast_state_badge( $state['code'], $state['label'] );
     } elseif ( 'dssast_date' === $column ) {
         $date = get_post_meta( $id, 'dssast_date', true );
         echo esc_html( is_string( $date ) && '' !== $date ? $date : '—' );
+    } elseif ( 'dssast_links' === $column ) {
+        $links = dssast_competition_links( $id );
+        echo esc_html( $links ? (string) count( $links ) : '—' );
     }
 }, 10, 2 );
 

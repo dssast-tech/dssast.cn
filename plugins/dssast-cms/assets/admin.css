@@ -613,3 +613,65 @@
         transition: none;
     }
 }
+
+/* --- competition push links (repeater) --- */
+
+.dssast-state-ongoing {
+    background: #e4f5eb;
+    color: #165839;
+}
+
+.dssast-state-upcoming {
+    background: #e9effd;
+    color: #2d4c90;
+}
+
+.dssast-state-finished {
+    background: #eef1f5;
+    color: #3e4e65;
+}
+
+.dssast-links-title {
+    font-size: 13px;
+    margin: 20px 0 2px;
+}
+
+.dssast-links {
+    margin: 10px 0 0;
+}
+
+.dssast-link-row {
+    align-items: center;
+    border-bottom: 1px dashed #dbe4f0;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) auto auto auto;
+    padding: 8px 0;
+}
+
+.dssast-link-row input {
+    box-sizing: border-box;
+    margin: 0;
+    min-width: 0;
+    width: 100%;
+}
+
+.dssast-link-row .button-link {
+    color: #2d4c90;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.dssast-link-remove {
+    color: #8b3731;
+}
+
+@media (max-width: 600px) {
+    .dssast-link-row {
+        grid-template-columns: minmax(0, 1fr) auto auto auto;
+    }
+
+    .dssast-link-row input[name="dssast_link_url[]"] {
+        grid-column: 1 / -1;
+    }
+}

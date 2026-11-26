@@ -128,7 +128,11 @@ while ( have_posts() ) :
 					<?php foreach ( $links as $link ) : ?>
 						<li>
 							<a href="<?php echo esc_url( $link['url'] ); ?>" target="_blank" rel="noopener noreferrer">
-								<span><?php echo esc_html( $link['title'] ); ?></span>
+								<?php if ( '' !== $link['title'] ) : ?>
+									<span><?php echo esc_html( $link['title'] ); ?></span>
+								<?php else : ?>
+									<span class="event-detail__link-url"><?php echo esc_html( $link['url'] ); ?></span>
+								<?php endif; ?>
 								<span class="event-detail__link-icon" aria-hidden="true">↗</span>
 							</a>
 						</li>

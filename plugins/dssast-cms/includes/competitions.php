@@ -62,7 +62,7 @@ function dssast_competition_links( $id ) {
         $url = isset( $link['url'] ) && is_string( $link['url'] ) ? esc_url_raw( $link['url'], array( 'http', 'https' ) ) : '';
         if ( '' === $url ) { continue; }
         $title = isset( $link['title'] ) && is_string( $link['title'] ) ? trim( $link['title'] ) : '';
-        $links[] = array( 'title' => '' !== $title ? $title : '查看推送', 'url' => $url );
+        $links[] = array( 'title' => $title, 'url' => $url );
     }
     return $links;
 }
@@ -130,8 +130,8 @@ function dssast_competition_field_control( $field, $value, $id = '' ) {
 function dssast_link_row( $title = '', $url = '' ) {
     ?>
     <div class="dssast-link-row">
-        <input type="text" name="dssast_link_title[]" value="<?php echo esc_attr( $title ); ?>" placeholder="推送标题，例如：报名开启">
-        <input type="url" name="dssast_link_url[]" value="<?php echo esc_attr( $url ); ?>" placeholder="https://mp.weixin.qq.com/s/…">
+        <input type="text" name="dssast_link_title[]" value="<?php echo esc_attr( $title ); ?>" placeholder="标题（可留空，留空显示网址）">
+        <input type="url" name="dssast_link_url[]" value="<?php echo esc_attr( $url ); ?>" placeholder="粘贴链接，如 https://mp.weixin.qq.com/s/…">
         <button type="button" class="button-link" data-dssast-move="up" aria-label="上移">↑</button>
         <button type="button" class="button-link" data-dssast-move="down" aria-label="下移">↓</button>
         <button type="button" class="button-link dssast-link-remove" data-dssast-remove aria-label="删除该链接">删除</button>
@@ -159,7 +159,7 @@ function dssast_details_box( $post ) {
     <p class="description">赛事时间会显示在详情页顶部；状态留空时按「报名截止 / 开赛 / 结束」自动推导。封面请在右侧「特色图片」上传，建议 1600×600（16:6），会作为详情页头图。</p>
 
     <h3 class="dssast-links-title">相关链接</h3>
-    <p class="description">最多 10 条。卡片和详情页都会按这里的顺序列出；点标题直接打开链接。</p>
+    <p class="description">直接粘贴链接即可（如公众号推送地址），标题可以留空；这些链接只显示在详情页，卡片列表不展示。</p>
     <input type="hidden" name="dssast_links_present" value="1">
     <div class="dssast-links" data-dssast-links>
         <?php
@@ -207,7 +207,7 @@ function dssast_validate_links( $input ) {
         if ( '' === $url && '' === $title ) { continue; }
         if ( '' === $url ) { return false; }
         if ( ! filter_var( $url, FILTER_VALIDATE_URL ) || ! in_array( strtolower( (string) wp_parse_url( $url, PHP_URL_SCHEME ) ), array( 'http', 'https' ), true ) ) { return false; }
-        $links[] = array( 'title' => '' !== $title ? $title : '查看推送', 'url' => esc_url_raw( $url, array( 'http', 'https' ) ) );
+        $links[] = array( 'title' => $title, 'url' => esc_url_raw( $url, array( 'http', 'https' ) ) );
         if ( count( $links ) > 10 ) { return false; }
     }
     return $links;

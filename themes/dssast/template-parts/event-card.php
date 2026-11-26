@@ -11,7 +11,6 @@ if ( ! $post instanceof WP_Post || ! function_exists( 'dssast_competition_state'
 }
 
 $state = dssast_competition_state( $post->ID );
-$links = dssast_competition_links( $post->ID );
 $url   = get_permalink( $post );
 $title = get_the_title( $post );
 
@@ -74,17 +73,4 @@ if ( '' === trim( (string) $summary ) ) {
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
     </div>
-
-    <?php if ( $links ) : ?>
-        <ul class="event-card__links">
-            <?php foreach ( $links as $link ) : ?>
-                <li>
-                    <a href="<?php echo esc_url( $link['url'] ); ?>" target="_blank" rel="noopener noreferrer">
-                        <span><?php echo esc_html( $link['title'] ); ?></span>
-                        <span class="event-card__link-icon" aria-hidden="true">↗</span>
-                    </a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
 </article>
